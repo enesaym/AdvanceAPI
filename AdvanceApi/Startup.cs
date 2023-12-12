@@ -1,3 +1,4 @@
+using AdvanceApi.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -31,6 +32,7 @@ namespace AdvanceApi
 			{
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = "AdvanceApi", Version = "v1" });
 			});
+			services.AddDapper(Configuration);
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
