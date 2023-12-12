@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34330.188
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvanceApi", "AdvanceApi\AdvanceApi.csproj", "{26D2259A-5C4A-43D7-A9B1-4CA845159EAD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvanceApi.CORE", "AdvanceApi.CORE\AdvanceApi.CORE.csproj", "{DBC4310E-1A34-48B0-85BA-B0C6F2B03DC9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvanceApi.DAL", "AdvanceApi.DAL\AdvanceApi.DAL.csproj", "{E1A4CD56-55F2-453E-8F8E-23D9172D4656}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvanceApi.BLL", "AdvanceApi.BLL\AdvanceApi.BLL.csproj", "{8A813A48-C729-4EE2-9533-BE025546EC8B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvanceApi.DTO", "AdvanceApi.DTO\AdvanceApi.DTO.csproj", "{7C041C5D-AA9D-4C67-8CCE-B51ED7B4265B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvanceApi.EXCEPTION", "AdvanceApi.EXCEPTION\AdvanceApi.EXCEPTION.csproj", "{8FBFE88E-ADEE-4783-ABB7-A53948B3C96F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvanceAPI.LOG", "AdvanceAPI.LOG\AdvanceAPI.LOG.csproj", "{2C8CE376-1BC0-437B-A764-57F489CA957B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{26D2259A-5C4A-43D7-A9B1-4CA845159EAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26D2259A-5C4A-43D7-A9B1-4CA845159EAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26D2259A-5C4A-43D7-A9B1-4CA845159EAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26D2259A-5C4A-43D7-A9B1-4CA845159EAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBC4310E-1A34-48B0-85BA-B0C6F2B03DC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBC4310E-1A34-48B0-85BA-B0C6F2B03DC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBC4310E-1A34-48B0-85BA-B0C6F2B03DC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBC4310E-1A34-48B0-85BA-B0C6F2B03DC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1A4CD56-55F2-453E-8F8E-23D9172D4656}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1A4CD56-55F2-453E-8F8E-23D9172D4656}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1A4CD56-55F2-453E-8F8E-23D9172D4656}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1A4CD56-55F2-453E-8F8E-23D9172D4656}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A813A48-C729-4EE2-9533-BE025546EC8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A813A48-C729-4EE2-9533-BE025546EC8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A813A48-C729-4EE2-9533-BE025546EC8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A813A48-C729-4EE2-9533-BE025546EC8B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C041C5D-AA9D-4C67-8CCE-B51ED7B4265B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C041C5D-AA9D-4C67-8CCE-B51ED7B4265B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C041C5D-AA9D-4C67-8CCE-B51ED7B4265B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C041C5D-AA9D-4C67-8CCE-B51ED7B4265B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8FBFE88E-ADEE-4783-ABB7-A53948B3C96F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FBFE88E-ADEE-4783-ABB7-A53948B3C96F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FBFE88E-ADEE-4783-ABB7-A53948B3C96F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FBFE88E-ADEE-4783-ABB7-A53948B3C96F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C8CE376-1BC0-437B-A764-57F489CA957B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C8CE376-1BC0-437B-A764-57F489CA957B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C8CE376-1BC0-437B-A764-57F489CA957B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C8CE376-1BC0-437B-A764-57F489CA957B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FFD6D522-A241-40DD-BBC8-7677DCEF5DC7}
+	EndGlobalSection
+EndGlobal
