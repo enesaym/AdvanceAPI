@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvanceApi.DTO", "AdvanceAp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvanceApi.EXCEPTION", "AdvanceApi.EXCEPTION\AdvanceApi.EXCEPTION.csproj", "{8FBFE88E-ADEE-4783-ABB7-A53948B3C96F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvanceAPI.LOG", "AdvanceAPI.LOG\AdvanceAPI.LOG.csproj", "{2C8CE376-1BC0-437B-A764-57F489CA957B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvanceApi.LOG", "AdvanceAPI.LOG\AdvanceApi.LOG.csproj", "{2C8CE376-1BC0-437B-A764-57F489CA957B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
