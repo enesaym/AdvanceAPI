@@ -30,7 +30,11 @@ namespace AdvanceApi.CORE.Entities
 
         public DateTime? RequestDate { get; set; }
 
-        public virtual Payment Payment { get; set; }
+		public int? EmployeeID { get; set; }
+
+		public virtual Employee Employee { get; set; }
+
+		public virtual Payment Payment { get; set; }
 
         public virtual Project Project { get; set; }
 

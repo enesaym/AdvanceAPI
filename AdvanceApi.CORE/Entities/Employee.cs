@@ -15,7 +15,8 @@ namespace AdvanceApi.CORE.Entities
             Payments = new HashSet<Payment>();
             Receipts = new HashSet<Receipt>();
             Projects = new HashSet<Project>();
-        }
+			Advances = new HashSet<Advance>();
+		}
 
         public int ID { get; set; }
 
@@ -41,9 +42,11 @@ namespace AdvanceApi.CORE.Entities
 
         public virtual BusinessUnit BusinessUnit { get; set; }
 
-        //public virtual ICollection<Employee> Employee1 { get; set; }
+		public virtual ICollection<Advance> Advances { get; set; }
 
-        public virtual Employee UpperEmployee { get; set; }
+		//public virtual ICollection<Employee> Employee1 { get; set; }
+
+		public virtual Employee UpperEmployee { get; set; }
 
         public virtual Title Title { get; set; }
 

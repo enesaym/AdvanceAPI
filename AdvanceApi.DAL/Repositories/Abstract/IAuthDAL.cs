@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace AdvanceApi.DAL.Repositories.Abstract
 {
-	public interface IUnitDAL
+	public interface IAuthDAL
 	{
-		Task<List<BusinessUnit>> GetAllUnits();
-		Task<BusinessUnit> AddBusinessUnit();
+		Task<Employee> Register(Employee employee, string password);
+		Task<Employee> Login(Employee employee, string password);
 	}
 }

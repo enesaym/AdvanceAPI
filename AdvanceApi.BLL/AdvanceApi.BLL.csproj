@@ -5,11 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Manager\" />
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <ProjectReference Include="..\AdvanceApi.CORE\AdvanceApi.CORE.csproj" />
+    <ProjectReference Include="..\AdvanceApi.DAL\AdvanceApi.DAL.csproj" />
+    <ProjectReference Include="..\AdvanceApi.DTO\AdvanceApi.DTO.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AdvanceApi.CORE.Entities;
+using AdvanceApi.DAL.Repositories.Concrete;
+using AdvanceApi.DAL.UnitOfWork;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -11,29 +14,23 @@ namespace AdvanceApi.Controllers
 	[Route("[controller]")]
 	public class WeatherForecastController : ControllerBase
 	{
-		private static readonly string[] Summaries = new[]
-		{
-			"Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-		};
+		private readonly IUnitOfWork _unitOfWork;
+    
 
 		private readonly ILogger<WeatherForecastController> _logger;
 
-		public WeatherForecastController(ILogger<WeatherForecastController> logger)
+		public WeatherForecastController(ILogger<WeatherForecastController> logger, IUnitOfWork uow)
 		{
 			_logger = logger;
+			_unitOfWork = uow;
 		}
 
 		[HttpGet]
-		public IEnumerable<WeatherForecast> Get()
-		{
-			var rng = new Random();
-			return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-			{
-				Date = DateTime.Now.AddDays(index),
-				TemperatureC = rng.Next(-20, 55),
-				Summary = Summaries[rng.Next(Summaries.Length)]
-			})
-			.ToArray();
+		public async Task <IEnumerable<BusinessUnit>> Get()
+		{	return await _unitOfWork.UnitDAL.GetAllUnits();
+
+		
+			
 		}
 	}
 }

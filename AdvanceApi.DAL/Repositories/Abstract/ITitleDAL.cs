@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace AdvanceApi.DAL.Repositories.Abstract
 {
-	public interface IUnitDAL
+	public interface ITitleDAL
 	{
-		Task<List<BusinessUnit>> GetAllUnits();
-		Task<BusinessUnit> AddBusinessUnit();
+		Task<List<Title>> GetAllTitles();
 	}
 }
