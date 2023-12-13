@@ -33,6 +33,8 @@ namespace AdvanceApi
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = "AdvanceApi", Version = "v1" });
 			});
 			services.AddDapper(Configuration);
+			services.AddServiceExtension();
+
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
