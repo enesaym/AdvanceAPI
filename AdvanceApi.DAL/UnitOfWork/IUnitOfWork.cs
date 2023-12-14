@@ -13,7 +13,11 @@ namespace AdvanceApi.DAL.UnitOfWork
 		IAuthDAL AuthDAL { get; }
 		ITitleDAL TitleDAL { get; }
         IEmployeeDAL EmployeeDAL { get; }
-        void Commit();
+		IAdvanceDAL AdvanceDAL { get; }
+		IAdvanceHistoryDAL AdvanceHistoryDAL { get; }
+		void Commit();
+		void RollBack();
+		void TransactionDispose();
 		void BeginTransaction();
 	}
 }

@@ -13,8 +13,8 @@ namespace AdvanceApi.BLL.Manager
 {
 	public class AuthManager
 	{
-        IUnitOfWork _unitOfWork;
-        MyMapper _mapper;
+		private readonly IUnitOfWork _unitOfWork;
+		private readonly MyMapper _mapper;
 		public AuthManager(IUnitOfWork unitOfWork,MyMapper mapper)
         {
             _unitOfWork = unitOfWork;

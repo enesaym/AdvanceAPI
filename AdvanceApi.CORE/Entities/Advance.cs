@@ -26,13 +26,13 @@ namespace AdvanceApi.CORE.Entities
 
         public int? StatusID { get; set; }
 
-        public int? PaymentID { get; set; }
-
         public DateTime? RequestDate { get; set; }
 
 		public int? EmployeeID { get; set; }
 
-		public virtual Employee Employee { get; set; }
+        public virtual Status Status { get; set; }
+
+        public virtual Employee Employee { get; set; }
 
 		public virtual ICollection<Payment> Payments { get; set; }
 

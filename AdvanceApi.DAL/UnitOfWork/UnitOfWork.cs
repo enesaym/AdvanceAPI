@@ -22,7 +22,9 @@ namespace AdvanceApi.DAL.UnitOfWork
 		private IAuthDAL _authDAL;
 		private ITitleDAL _titleDAL;
         private IEmployeeDAL _employeeDAL;
-        public UnitOfWork(IDbConnection conn)
+		private IAdvanceDAL _advanceDAL;
+		private IAdvanceHistoryDAL _advanceHistoryDAL;
+		public UnitOfWork(IDbConnection conn)
 		{
 			_connection = conn;
 			_connection.Open();
@@ -46,9 +48,17 @@ namespace AdvanceApi.DAL.UnitOfWork
         {
             get { return _employeeDAL ?? (_employeeDAL = new EmployeeDAL(_connection)); }
         }
+		public IAdvanceDAL AdvanceDAL
+		{
+			get { return _advanceDAL ?? (_advanceDAL = new AdvanceDAL(_connection,_transaction)); }
+		}
+		public IAdvanceHistoryDAL AdvanceHistoryDAL
+		{
+			get { return _advanceHistoryDAL ?? (_advanceHistoryDAL = new AdvanceHistoryDAL(_connection,_transaction)); }
+		}
 
 
-        public void BeginTransaction()
+		public void BeginTransaction()
 		{
 			try
 			{
@@ -60,23 +70,35 @@ namespace AdvanceApi.DAL.UnitOfWork
 				throw;
 			}
 		}
-
 		public void Commit()
 		{
-			try
-			{
-				_transaction.Commit();
-			}
-			catch
-			{
-				_transaction.Rollback();
-			}
-			finally
-			{
-				_transaction.Dispose();
-			
-			}
-		}	
+			_transaction.Commit();	
+		}
+		public void RollBack()
+		{
+			_transaction.Rollback();
+		}
+		public void TransactionDispose() 
+		{
+			_transaction.Dispose();
+		}
+
+		//public void Commit()
+		//{
+		//	try
+		//	{
+		//		_transaction.Commit();
+		//	}
+		//	catch
+		//	{
+		//		_transaction.Rollback();
+		//	}
+		//	finally
+		//	{
+		//		_transaction.Dispose();
+
+		//	}
+		//}	
 
 		public void Dispose()
 		{
@@ -104,6 +126,7 @@ namespace AdvanceApi.DAL.UnitOfWork
 				_dispose = true;
 			}
 		}
+
 	
 	}
 }

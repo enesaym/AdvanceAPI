@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AdvanceApi.BLL.Manager;
+using AdvanceApi.DTO.Advance;
+using AdvanceApi.DTO.Employee;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace AdvanceApi.Controllers
 {
@@ -7,9 +11,17 @@ namespace AdvanceApi.Controllers
 	[ApiController]
 	public class AdvanceController : ControllerBase
 	{
-        public AdvanceController()
+        private readonly AdvanceManager _advanceManager;
+        public AdvanceController(AdvanceManager manager)
         {
-                
+                _advanceManager = manager;
         }
-    }
+		[HttpPost("AddAdvance")]
+		public async Task<IActionResult> Register([FromBody] AdvanceInsertDTO dto)
+		{
+			var advance = await _advanceManager.InsertAdvanceAndHistory(dto);
+			
+			return Ok(advance);
+		}
+	}
 }

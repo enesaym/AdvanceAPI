@@ -22,8 +22,10 @@ namespace AdvanceApi.Extensions
 				Subject = new ClaimsIdentity(new Claim[]
 				{
 					//buraya claimler eklenecek roller eklenebilir
-					new Claim("ID", dto.ID.ToString()), 
+					new Claim("ID", dto.ID.ToString()),
 					new Claim("Name", dto.Name),
+					new Claim("Surname", dto.Surname),
+					new Claim("Email", dto.Email),
 					new Claim("Phone", dto.PhoneNumber)
 				}),
 				Issuer = issuer,
