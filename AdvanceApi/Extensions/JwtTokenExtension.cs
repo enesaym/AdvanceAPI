@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using AdvanceApi.DTO.Employee;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -9,7 +10,7 @@ namespace AdvanceApi.Extensions
 {
 	public static class JwtTokenExtension
 	{
-		public static string GenerateJwtToken(this IConfiguration configuration, string username)
+		public static string GenerateJwtToken(this IConfiguration configuration,EmployeeSelectDTO dto)
 		{
 			var issuer = configuration["JwtIssuer"];
 			var audience = configuration["JwtAudience"];
@@ -21,6 +22,9 @@ namespace AdvanceApi.Extensions
 				Subject = new ClaimsIdentity(new Claim[]
 				{
 					//buraya claimler eklenecek roller eklenebilir
+					new Claim("ID", dto.ID.ToString()), 
+					new Claim("Name", dto.Name),
+					new Claim("Phone", dto.PhoneNumber)
 				}),
 				Issuer = issuer,
 				Audience = audience,

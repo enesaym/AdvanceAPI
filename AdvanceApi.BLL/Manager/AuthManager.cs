@@ -20,17 +20,22 @@ namespace AdvanceApi.BLL.Manager
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-		public async Task<ApiResponse<EmployeeLoginDTO>> Login(EmployeeLoginDTO dto)
+		public async Task<ApiResponse<EmployeeSelectDTO>> Login(EmployeeLoginDTO dto)
 		{
 			try
 			{
 				var employee = _mapper.Map<EmployeeLoginDTO, Employee>(dto);
 				var mapped = await _unitOfWork.AuthDAL.Login(employee,dto.Password);
-				return new ApiResponse<EmployeeLoginDTO>(dto);
+				if (mapped == null)
+				{
+					return null;
+				}
+				var mappedEmployeeSelect = _mapper.Map<Employee, EmployeeSelectDTO>(mapped);
+				return new ApiResponse<EmployeeSelectDTO>(mappedEmployeeSelect);
 			}
 			catch (Exception ex)
 			{
-				return new ApiResponse<EmployeeLoginDTO>(ex.Message);
+				return new ApiResponse<EmployeeSelectDTO>(ex.Message);
 			}
 		}
 

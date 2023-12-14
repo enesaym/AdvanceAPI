@@ -10,7 +10,6 @@ namespace AdvanceApi.CORE.Entities
     {
         public Payment()
         {
-            Advances = new HashSet<Advance>();
         }
         public int ID { get; set; }
 
@@ -18,7 +17,7 @@ namespace AdvanceApi.CORE.Entities
 
         public int? FinanceManagerID { get; set; }
 
-        public virtual ICollection<Advance> Advances { get; set; }
+		public int? AdvanceId { get; set; }
 
         public virtual Employee Employee { get; set; }
     }

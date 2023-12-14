@@ -27,12 +27,12 @@ namespace AdvanceApi.Controllers
 		public async Task<IActionResult> Login([FromBody] EmployeeLoginDTO dto)
 		{
 			var employee = await _authManager.Login(dto);
-			if (employee == null)
+			if (employee== null)
 			{
 		
 				return null;
 			}
-			var token = JwtTokenExtension.GenerateJwtToken(_configuration,employee.Data.Email);
+			var token = JwtTokenExtension.GenerateJwtToken(_configuration,employee.Data);
 			return Ok(token);
 		}
 

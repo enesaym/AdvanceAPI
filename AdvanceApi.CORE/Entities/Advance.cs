@@ -34,9 +34,9 @@ namespace AdvanceApi.CORE.Entities
 
 		public virtual Employee Employee { get; set; }
 
-		public virtual Payment Payment { get; set; }
+		public virtual ICollection<Payment> Payments { get; set; }
 
-        public virtual Project Project { get; set; }
+		public virtual Project Project { get; set; }
 
         public virtual ICollection<AdvanceHistory> AdvanceHistories { get; set; }
 

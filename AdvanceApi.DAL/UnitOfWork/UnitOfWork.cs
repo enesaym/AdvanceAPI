@@ -21,8 +21,8 @@ namespace AdvanceApi.DAL.UnitOfWork
 		private IUnitDAL _unitDAL;
 		private IAuthDAL _authDAL;
 		private ITitleDAL _titleDAL;
-
-		public UnitOfWork(IDbConnection conn)
+        private IEmployeeDAL _employeeDAL;
+        public UnitOfWork(IDbConnection conn)
 		{
 			_connection = conn;
 			_connection.Open();
@@ -42,9 +42,13 @@ namespace AdvanceApi.DAL.UnitOfWork
 		{
 			get { return _titleDAL ?? (_titleDAL = new TitleDAL(_connection)); }
 		}
+        public IEmployeeDAL EmployeeDAL
+        {
+            get { return _employeeDAL ?? (_employeeDAL = new EmployeeDAL(_connection)); }
+        }
 
 
-		public void BeginTransaction()
+        public void BeginTransaction()
 		{
 			try
 			{

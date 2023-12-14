@@ -17,7 +17,8 @@ namespace AdvanceApi.BLL.Mapper
 		{
 			CreateMap<BusinessUnit,BusinessUnitSelectDTO>().ReverseMap();
 			CreateMap<EmployeeRegisterDTO, Employee>().ReverseMap();
-			CreateMap<EmployeeLoginDTO, Employee>().ReverseMap();
+            CreateMap<EmployeeSelectDTO, Employee>().ReverseMap();
+            CreateMap<EmployeeLoginDTO, Employee>().ReverseMap();
 			CreateMap<TitleSelectDTO,Title>().ReverseMap();
 
 		}
