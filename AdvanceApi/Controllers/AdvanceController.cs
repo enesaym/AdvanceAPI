@@ -17,11 +17,17 @@ namespace AdvanceApi.Controllers
                 _advanceManager = manager;
         }
 		[HttpPost("AddAdvance")]
-		public async Task<IActionResult> Register([FromBody] AdvanceInsertDTO dto)
+		public async Task<IActionResult> AddAdvance([FromBody] AdvanceInsertDTO dto)
 		{
 			var advance = await _advanceManager.InsertAdvanceAndHistory(dto);
-			
-			return Ok(advance);
+			if (advance.Success==true)
+			{
+                return Ok(advance);
+            }
+			else
+			{
+				return null;
+			}
 		}
 	}
 }

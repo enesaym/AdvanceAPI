@@ -23,8 +23,8 @@ namespace AdvanceApi.DAL.Repositories.Concrete
 			try
 			{
 				string query = "select * from Title";
-				var sonuc = await _connection.QueryAsync<Title>(query);
-				return sonuc.ToList();
+				var result = await _connection.QueryAsync<Title>(query);
+				return result.ToList();
 			}
 			catch (Exception ex)
 			{

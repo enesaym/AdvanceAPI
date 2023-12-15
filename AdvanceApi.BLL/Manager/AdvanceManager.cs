@@ -28,7 +28,7 @@ namespace AdvanceApi.BLL.Manager
         /// </summary>
         /// <param name="advance"></param>
         /// <returns>Inserted Advance ID</returns>
-        public async Task<ApiResponse<int>> InsertAdvanceAndHistory(AdvanceInsertDTO advance)
+        public async Task<ApiResponse<AdvanceInsertDTO>> InsertAdvanceAndHistory(AdvanceInsertDTO advance)
         {
 			_unitOfWork.BeginTransaction();
 			try
@@ -40,8 +40,12 @@ namespace AdvanceApi.BLL.Manager
 				{
 					// İkinci tabloya insert
 					AdvanceHistoryInsertDTO advanceHistory = new AdvanceHistoryInsertDTO();
-					advanceHistory.AdvanceID = insertedAdvanceId; 
-
+					advanceHistory.AdvanceID = insertedAdvanceId;
+					advanceHistory.TransactorID = advance.EmployeeID;
+					//talep ilk olusturuldugunda 201 = talep olusturuldu
+					advanceHistory.StatusID = 201;
+					advanceHistory.Date=DateTime.Now;
+					advanceHistory.ApprovedAmount = advance.AdvanceAmount;
 					var advanceHistoryMapped=_mapper.Map<AdvanceHistoryInsertDTO, AdvanceHistory>(advanceHistory);
 
 					var insertedAdvanceHistory=await _unitOfWork.AdvanceHistoryDAL.InsertAdvanceHistory(advanceHistoryMapped);
@@ -49,7 +53,7 @@ namespace AdvanceApi.BLL.Manager
 					_unitOfWork.Commit();
 
 					//eklenen advance id döner
-					return new ApiResponse<int>(insertedAdvanceId); 
+					return new ApiResponse<AdvanceInsertDTO>(advance); 
 				}
 				else
 				{
@@ -60,7 +64,7 @@ namespace AdvanceApi.BLL.Manager
 			catch (Exception ex)
 			{
 				_unitOfWork.RollBack();
-				return new ApiResponse<int>(ex.Message);
+				return new ApiResponse<AdvanceInsertDTO>(ex.Message);
 			}
 			finally 
 			{
