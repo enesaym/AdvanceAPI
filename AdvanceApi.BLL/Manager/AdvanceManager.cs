@@ -4,6 +4,8 @@ using AdvanceApi.CORE.Response;
 using AdvanceApi.DAL.UnitOfWork;
 using AdvanceApi.DTO.Advance;
 using AdvanceApi.DTO.AdvanceHistory;
+using AdvanceApi.DTO.Project;
+using AdvanceApi.DTO.Status;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
@@ -34,6 +36,8 @@ namespace AdvanceApi.BLL.Manager
 			try
 			{
 				var mapped= _mapper.Map<AdvanceInsertDTO, Advance>(advance);
+				mapped.StatusID = 101;
+				mapped.RequestDate = DateTime.Now;
 				int insertedAdvanceId = await _unitOfWork.AdvanceDAL.AdvanceInsert(mapped);
 
 				if (insertedAdvanceId > 0)
@@ -72,6 +76,42 @@ namespace AdvanceApi.BLL.Manager
 
 			}
 		}
+
+
+		//lazim olcak
+		public async Task<ApiResponse<List<AdvanceSelectDTO>>> GetAdvanceAndHistory(int employeeID)
+		{
+			try
+			{
+                var result = await _unitOfWork.AdvanceDAL.GetEmployeeAdvances(employeeID);
+                result.ForEach(async x =>
+                {
+                  
+                    var status = await _unitOfWork.StatusDAL.GetStatusById(x.StatusID.Value);
+                    x.Status = status;
+
+                    var project = await _unitOfWork.ProjectDAL.GetProjectById(x.ProjectID.Value);
+
+                    x.Project = project;
+                });
+				var mapped=_mapper.Map<List<Advance>,List<AdvanceSelectDTO>> (result);
+
+				return new ApiResponse<List<AdvanceSelectDTO>>(mapped);
+
+            }
+			catch (Exception)
+			{
+
+				throw;
+			}
+		
+        }
+        
+
+
+
+
+
 
     }
 }

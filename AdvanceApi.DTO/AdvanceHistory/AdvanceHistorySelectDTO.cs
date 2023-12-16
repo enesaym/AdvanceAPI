@@ -1,12 +1,13 @@
+﻿using AdvanceApi.DTO.Employee;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-namespace AdvanceApi.CORE.Entities
+
+namespace AdvanceApi.DTO.AdvanceHistory
 {
-   
-    public partial class AdvanceHistory
+    public class AdvanceHistorySelectDTO
     {
         public int ID { get; set; }
 
@@ -20,10 +21,6 @@ namespace AdvanceApi.CORE.Entities
 
         public DateTime? Date { get; set; }
 
-        public virtual Advance Advance { get; set; }
-
-        public virtual Employee Transactor { get; set; }
-
-        public virtual Status Status { get; set; }
+        public virtual EmployeeSelectDTO Transactor { get; set; }
     }
 }

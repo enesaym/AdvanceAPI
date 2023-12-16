@@ -17,5 +17,9 @@ namespace AdvanceApi.DTO.Employee
         public string PhoneNumber { get; set; }
 
         public string Email { get; set; }
+    
+        public int TitleID { get; set; }
+
+        public string TitleName { get; set; }   
     }
 }

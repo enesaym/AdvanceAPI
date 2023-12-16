@@ -10,29 +10,30 @@ using System.Threading.Tasks;
 
 namespace AdvanceApi.DAL.Repositories.Concrete
 {
-    public class EmployeeDAL :IEmployeeDAL
+    public class StatusDAL :IStatusDAL
     {
         IDbConnection _connection;
-        public EmployeeDAL(IDbConnection dbConnection)
+        public StatusDAL(IDbConnection dbConnection)
         {
                 _connection = dbConnection;
         }
-        public async Task<List<Employee>> GetEmployeeBase()
+
+        public async Task<Status> GetStatusById(int Id)
         {
             try
             {
-                string query = "select Name,Surname,PhoneNumber,Email from Employee";
-                var result = await _connection.QueryAsync<Employee>(query);
-                return result.ToList();
+                var query = "SELECT * FROM Status WHERE Id = @Id";
+                var result = await _connection.QueryAsync<Status>(query, new { Id });
+
+                return result.FirstOrDefault();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
+
                 return null;
-
             }
+          
         }
-
-
 
     }
 }

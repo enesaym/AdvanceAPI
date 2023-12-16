@@ -31,6 +31,9 @@ namespace AdvanceApi.BLL.Manager
 					return null;
 				}
 				var mappedEmployeeSelect = _mapper.Map<Employee, EmployeeSelectDTO>(mapped);
+
+				//title name doldurdum
+				mappedEmployeeSelect.TitleName=mapped.Title.TitleName;
 				return new ApiResponse<EmployeeSelectDTO>(mappedEmployeeSelect);
 			}
 			catch (Exception ex)

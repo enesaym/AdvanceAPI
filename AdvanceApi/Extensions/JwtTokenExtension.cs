@@ -26,7 +26,11 @@ namespace AdvanceApi.Extensions
 					new Claim("Name", dto.Name),
 					new Claim("Surname", dto.Surname),
 					new Claim("Email", dto.Email),
-					new Claim("Phone", dto.PhoneNumber)
+					new Claim("Phone", dto.PhoneNumber),
+					new Claim("TitleID",dto.TitleID.ToString()),
+					new Claim("TitleName",dto.TitleName),
+
+
 				}),
 				Issuer = issuer,
 				Audience = audience,

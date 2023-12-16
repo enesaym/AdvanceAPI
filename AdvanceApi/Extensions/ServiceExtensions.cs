@@ -18,7 +18,8 @@ namespace AdvanceApi.Extensions
 			services.AddScoped<TitleManager>();
 			services.AddScoped<EmployeeManager>();
 			services.AddScoped<AdvanceManager>();
+            services.AddScoped<ProjectManager>();
 
-		}
+        }
 	}
 }

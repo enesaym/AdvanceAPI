@@ -21,7 +21,22 @@ namespace AdvanceApi.DAL.Repositories.Concrete
         }
 		public async Task<Employee> Login(Employee employee, string password)
 		{
-			var user =await _connection.QueryFirstOrDefaultAsync<Employee>("select * from Employee where Email = @Email", new { Email = employee.Email });
+			var query ="select e.*, t.ID , t.TitleName from Employee e LEFT JOIN Title t ON e.TitleID = t.ID where e.Email = @Email";
+			var parameters = new DynamicParameters();
+			parameters.Add("@Email", employee.Email, DbType.String);
+
+			var data = await _connection.QueryAsync<Employee, Title, Employee>(
+				query,
+				(emp, title) =>
+				{
+					emp.Title = title;
+					return emp;
+				},
+			
+				parameters,
+				splitOn: "ID");
+
+			var user = data.FirstOrDefault();
 			if (user == null)
 			{
 				return null;

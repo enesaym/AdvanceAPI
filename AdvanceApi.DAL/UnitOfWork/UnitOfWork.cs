@@ -24,7 +24,11 @@ namespace AdvanceApi.DAL.UnitOfWork
         private IEmployeeDAL _employeeDAL;
 		private IAdvanceDAL _advanceDAL;
 		private IAdvanceHistoryDAL _advanceHistoryDAL;
-		public UnitOfWork(IDbConnection conn)
+        private IProjectDAL _projectDAL;
+        private IStatusDAL _statusDAL;
+ 
+
+        public UnitOfWork(IDbConnection conn)
 		{
 			_connection = conn;
 			_connection.Open();
@@ -56,9 +60,17 @@ namespace AdvanceApi.DAL.UnitOfWork
 		{
 			get { return _advanceHistoryDAL ?? (_advanceHistoryDAL = new AdvanceHistoryDAL(_connection,_transaction)); }
 		}
+        public IProjectDAL ProjectDAL
+        {
+            get { return _projectDAL ?? (_projectDAL = new ProjectDAL(_connection)); }
+        }
+        public IStatusDAL StatusDAL
+        {
+            get { return _statusDAL ?? (_statusDAL = new StatusDAL(_connection)); }
+        }
 
 
-		public void BeginTransaction()
+        public void BeginTransaction()
 		{
 			try
 			{

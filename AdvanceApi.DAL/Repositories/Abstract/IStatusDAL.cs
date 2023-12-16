@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace AdvanceApi.DAL.Repositories.Abstract
 {
-    public interface IProjectDAL
+    public interface IStatusDAL
     {
-        Task<List<Project>> GetProjectsByEmployeeID(int id);
-        Task<Project> GetProjectById(int Id);
+        Task<Status> GetStatusById(int Id);
     }
 }

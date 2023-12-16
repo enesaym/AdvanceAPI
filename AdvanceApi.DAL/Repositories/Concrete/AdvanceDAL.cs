@@ -26,7 +26,7 @@ namespace AdvanceApi.DAL.Repositories.Concrete
             INSERT INTO Advance (AdvanceAmount, AdvanceDescription, ProjectID, DesiredDate, StatusID, RequestDate, EmployeeID)
             VALUES (@AdvanceAmount, @AdvanceDescription, @ProjectID, @DesiredDate, @StatusID,@RequestDate, @EmployeeID);
             SELECT CAST(SCOPE_IDENTITY() as int);";
-
+	
 			var parameters = new DynamicParameters();
 			parameters.Add("@AdvanceAmount", advance.AdvanceAmount);
 			parameters.Add("@AdvanceDescription", advance.AdvanceDescription);
@@ -36,9 +36,62 @@ namespace AdvanceApi.DAL.Repositories.Concrete
 			parameters.Add("@RequestDate", advance.RequestDate);
 			parameters.Add("@EmployeeID", advance.EmployeeID);
 
-
 			int insertedId = await _connection.ExecuteScalarAsync<int>(sqlQuery, parameters,transaction:_transaction);
 			return insertedId;
+        }
+        public async Task<List<Advance>> GetEmployeeAdvances(int employeeId)
+        {
+            string query = @"SELECT a.Id, a.AdvanceAmount, a.AdvanceDescription, a.ProjectID, a.DesiredDate, a.RequestDate, a.StatusID, a.EmployeeID,
+                    p.Id, p.DeterminedPaymentDate,
+                    r.Id, r.ReceiptNo, r.Date, r.isRefundReceipt,
+                    ah.Id, ah.TransactorID, ah.Date, ah.StatusID, ah.ApprovedAmount,
+                    e.Id, e.Name, e.Surname,
+                    t.Id, t.TitleName
+                    FROM Advance a
+                    LEFT JOIN Payment p on p.AdvanceID=a.Id
+                    LEFT JOIN Receipt r on r.AdvanceID=a.Id
+                    LEFT JOIN AdvanceHistory ah on ah.AdvanceID = a.ID
+                    LEFT JOIN Employee e on e.ID = ah.TransactorID
+                    LEFT JOIN Title t on t.ID = e.TitleID
+                    WHERE a.EmployeeID = @EmployeeID";
+
+            var advances = new Dictionary<int, Advance>();
+
+            var parameters = new
+            {
+                EmployeeID = employeeId
+            };
+
+            var result = await _connection.QueryAsync<Advance, Payment, Receipt, AdvanceHistory, Employee, Title, Advance>(query, (advance, payment, receipt, advancehistory, transactor, title) =>
+            {
+                if (!advances.TryGetValue(advance.ID, out Advance advanceEntry))
+                {
+                    advanceEntry = advance;
+                    advanceEntry.Project = new Project();
+                    advanceEntry.Status = new Status();
+                    advanceEntry.Payments = new List<Payment>();
+                    advanceEntry.Receipts = new List<Receipt>();
+                    advanceEntry.AdvanceHistories = new List<AdvanceHistory>();
+                    advances.Add(advance.ID, advanceEntry);
+                }
+
+                if (payment != null && !advanceEntry.Payments.Any(x => x.ID == payment.ID))
+                    advanceEntry.Payments.Add(payment);
+
+                if (receipt != null && !advanceEntry.Receipts.Any(x => x.ID == receipt.ID))
+                    advanceEntry.Receipts.Add(receipt);
+
+                if (advancehistory != null && advancehistory.TransactorID != employeeId && !advanceEntry.AdvanceHistories.Any(x => x.ID == advancehistory.ID))
+                {
+                    transactor.Title = title;
+                    advancehistory.Transactor = transactor;
+                    advanceEntry.AdvanceHistories.Add(advancehistory);
+                }
+
+                return advanceEntry;
+            }, parameters);
+            
+            return advances.Values.ToList();
         }
 
     }

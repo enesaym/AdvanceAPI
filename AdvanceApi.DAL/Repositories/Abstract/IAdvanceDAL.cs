@@ -10,5 +10,7 @@ namespace AdvanceApi.DAL.Repositories.Abstract
 	public interface IAdvanceDAL
 	{
 		Task<int> AdvanceInsert(Advance advance);
-	}
+		Task<List<Advance>> GetEmployeeAdvances(int employeeId);
+
+    }
 }

@@ -29,5 +29,19 @@ namespace AdvanceApi.Controllers
 				return null;
 			}
 		}
-	}
+        [HttpGet("GetAdvanceWithAll/{id}")]
+        public async Task<IActionResult> GetAdvance(int id)
+        {
+            var advance = await _advanceManager.GetAdvanceAndHistory(id);
+            if (advance.Success == true)
+            {
+                return Ok(advance);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+    }
 }
