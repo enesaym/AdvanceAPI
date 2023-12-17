@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace AdvanceApi.DTO.Employee
 {
-	public class EmployeeSelectDTO
-	{
+    public class EmployeeSelectHistoryDTO
+    {
         public int ID { get; set; }
 
         public string Name { get; set; }
@@ -21,8 +21,6 @@ namespace AdvanceApi.DTO.Employee
 
         public TitleSelectDTO Title { get; set; }
 
-        public int TitleID { get; set; }
-
-        public string TitleName { get; set; }   
+        
     }
 }

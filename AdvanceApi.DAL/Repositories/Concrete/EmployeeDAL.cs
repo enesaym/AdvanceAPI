@@ -21,7 +21,7 @@ namespace AdvanceApi.DAL.Repositories.Concrete
         {
             try
             {
-                string query = "select Name,Surname,PhoneNumber,Email from Employee";
+                string query = "select ID,Name,Surname,PhoneNumber,Email from Employee";
                 var result = await _connection.QueryAsync<Employee>(query);
                 return result.ToList();
             }

@@ -78,23 +78,35 @@ namespace AdvanceApi.BLL.Manager
 		}
 
 
-		//lazim olcak
+		
 		public async Task<ApiResponse<List<AdvanceSelectDTO>>> GetAdvanceAndHistory(int employeeID)
 		{
 			try
 			{
                 var result = await _unitOfWork.AdvanceDAL.GetEmployeeAdvances(employeeID);
-                result.ForEach(async x =>
+				var a=await _unitOfWork.AdvanceHistoryDAL.GetPendingApprovalAdvances(employeeID);
+                foreach (var item in result)
                 {
-                  
-                    var status = await _unitOfWork.StatusDAL.GetStatusById(x.StatusID.Value);
-                    x.Status = status;
+					//genel mudur onayladi ise avans statusu onaylandi olarak belirlenir
+					if (item.AdvanceHistories.LastOrDefault().StatusID.Value == 205)
+					{
+                        var status = await _unitOfWork.StatusDAL.GetStatusById
+                       (102);
+                        item.Status = status;
+                    }
+					else
+					{
+                        var status = await _unitOfWork.StatusDAL.GetStatusById
+						(item.AdvanceHistories.LastOrDefault().StatusID.Value);
+                        item.Status = status;
+                    }
+                   
 
-                    var project = await _unitOfWork.ProjectDAL.GetProjectById(x.ProjectID.Value);
-
-                    x.Project = project;
-                });
-				var mapped=_mapper.Map<List<Advance>,List<AdvanceSelectDTO>> (result);
+                    var project = await _unitOfWork.ProjectDAL.GetProjectById(item.ProjectID.Value);
+                    item.Project = project;
+                }
+          
+                var mapped=_mapper.Map<List<Advance>,List<AdvanceSelectDTO>> (result);
 
 				return new ApiResponse<List<AdvanceSelectDTO>>(mapped);
 

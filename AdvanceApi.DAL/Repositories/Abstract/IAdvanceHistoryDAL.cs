@@ -10,5 +10,7 @@ namespace AdvanceApi.DAL.Repositories.Abstract
 	public interface IAdvanceHistoryDAL
 	{
 		Task<AdvanceHistory> InsertAdvanceHistory(AdvanceHistory advanceHistory);
-	}
+		Task<List<AdvanceHistory>> GetPendingApprovalAdvances(int employeeId);
+
+    }
 }

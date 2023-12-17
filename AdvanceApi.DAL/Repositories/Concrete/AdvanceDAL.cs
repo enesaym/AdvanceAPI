@@ -10,35 +10,40 @@ using System.Threading.Tasks;
 
 namespace AdvanceApi.DAL.Repositories.Concrete
 {
-	public class AdvanceDAL :IAdvanceDAL
-	{
+    public class AdvanceDAL : IAdvanceDAL
+    {
         IDbConnection _connection;
-		IDbTransaction _transaction;
-        public AdvanceDAL(IDbConnection dbConnection,IDbTransaction transaction)
+        IDbTransaction _transaction;
+        public AdvanceDAL(IDbConnection dbConnection, IDbTransaction transaction)
         {
-                _connection = dbConnection;
-			_transaction= transaction;
+            _connection = dbConnection;
+            _transaction = transaction;
         }
         public async Task<int> AdvanceInsert(Advance advance)
         {
-			//eklenen kaydın id sini döndürecek
-			string sqlQuery = @"
+            //eklenen kaydın id sini döndürecek
+            string sqlQuery = @"
             INSERT INTO Advance (AdvanceAmount, AdvanceDescription, ProjectID, DesiredDate, StatusID, RequestDate, EmployeeID)
             VALUES (@AdvanceAmount, @AdvanceDescription, @ProjectID, @DesiredDate, @StatusID,@RequestDate, @EmployeeID);
             SELECT CAST(SCOPE_IDENTITY() as int);";
-	
-			var parameters = new DynamicParameters();
-			parameters.Add("@AdvanceAmount", advance.AdvanceAmount);
-			parameters.Add("@AdvanceDescription", advance.AdvanceDescription);
-			parameters.Add("@ProjectID", advance.ProjectID);
-			parameters.Add("@DesiredDate", advance.DesiredDate);
-			parameters.Add("@StatusID", advance.StatusID);
-			parameters.Add("@RequestDate", advance.RequestDate);
-			parameters.Add("@EmployeeID", advance.EmployeeID);
 
-			int insertedId = await _connection.ExecuteScalarAsync<int>(sqlQuery, parameters,transaction:_transaction);
-			return insertedId;
+            var parameters = new DynamicParameters();
+            parameters.Add("@AdvanceAmount", advance.AdvanceAmount);
+            parameters.Add("@AdvanceDescription", advance.AdvanceDescription);
+            parameters.Add("@ProjectID", advance.ProjectID);
+            parameters.Add("@DesiredDate", advance.DesiredDate);
+            parameters.Add("@StatusID", advance.StatusID);
+            parameters.Add("@RequestDate", advance.RequestDate);
+            parameters.Add("@EmployeeID", advance.EmployeeID);
+
+            int insertedId = await _connection.ExecuteScalarAsync<int>(sqlQuery, parameters, transaction: _transaction);
+            return insertedId;
         }
+        /// <summary>
+        /// employee ıd alır ve kisinin gecmis avans taleplerini detayları ile getirir
+        /// </summary>
+        /// <param name="employeeId"></param>
+        /// <returns>advance details</returns>
         public async Task<List<Advance>> GetEmployeeAdvances(int employeeId)
         {
             string query = @"SELECT a.Id, a.AdvanceAmount, a.AdvanceDescription, a.ProjectID, a.DesiredDate, a.RequestDate, a.StatusID, a.EmployeeID,
@@ -90,9 +95,11 @@ namespace AdvanceApi.DAL.Repositories.Concrete
 
                 return advanceEntry;
             }, parameters);
-            
+
             return advances.Values.ToList();
         }
+
+       
 
     }
 }

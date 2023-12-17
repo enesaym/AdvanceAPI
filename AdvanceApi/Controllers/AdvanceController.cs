@@ -35,7 +35,20 @@ namespace AdvanceApi.Controllers
             var advance = await _advanceManager.GetAdvanceAndHistory(id);
             if (advance.Success == true)
             {
-                return Ok(advance);
+                return Ok(advance.Data);
+            }
+            else
+            {
+                return null;
+            }
+        }
+        [HttpGet("GetPendingApprovalAdvance/{id}")]
+        public async Task<IActionResult> GetPendingApprovalAdvance(int id)
+        {
+            var advance = await _advanceManager.GetAdvanceAndHistory(id);
+            if (advance.Success == true)
+            {
+                return Ok(advance.Data);
             }
             else
             {
