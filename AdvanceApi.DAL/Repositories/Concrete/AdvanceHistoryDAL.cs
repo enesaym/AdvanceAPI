@@ -52,9 +52,9 @@ namespace AdvanceApi.DAL.Repositories.Concrete
         
         public async Task<List<AdvanceHistory>> GetPendingApprovalAdvances(int employeeId)
         {
-            string query = @"select ah.Id,ah.TransactorID,ah.StatusID,ah.Date,ah.ApprovedAmount,e.ID,e.Name,e.Surname,e.TitleID,a.Id,a.ProjectID,a.RequestDate,ee.Id,ee.Name,ee.Surname,bu.Id,bu.BusinessUnitName,t.Id,t.TitleName from AdvanceHistory ah
-              JOIN Employee e on e.ID = ah.TransactorID 
-             JOIN Employee uppere on uppere.ID = e.UpperEmployeeID 
+            string query = @"select ah.Id,ah.TransactorID,ah.StatusID,ah.Date,ah.ApprovedAmount,e.ID,e.Name,e.Surname,e.TitleID,a.Id,a.ProjectID,a.DesiredDate,a.RequestDate,ee.Id,ee.Name,ee.Surname,bu.Id,bu.BusinessUnitName,t.Id,t.TitleName from AdvanceHistory ah
+              join Employee e on e.ID = ah.TransactorID 
+             join Employee uppere on uppere.ID = e.UpperEmployeeID 
              join Advance a on a.ID=ah.AdvanceID
             join Employee ee on ee.ID=a.EmployeeID
             join BusinessUnit bu on bu.ID=ee.BusinessUnitID
@@ -74,8 +74,8 @@ namespace AdvanceApi.DAL.Repositories.Concrete
                 advanceHistory.Advance = advance;
                 advanceHistory.Transactor = transactor;
                 advanceHistory.Advance.Employee = employee;
-                advanceHistory.Transactor.Title = title;
-                advanceHistory.Transactor.BusinessUnit = businessUnit;
+                advanceHistory.Advance.Employee.Title = title;
+                advanceHistory.Advance.Employee.BusinessUnit = businessUnit;
                 return advanceHistory;
             },
          param: parameters

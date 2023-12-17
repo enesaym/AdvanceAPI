@@ -1,4 +1,6 @@
-﻿using AdvanceApi.DTO.Employee;
+﻿using AdvanceApi.DTO.Advance;
+using AdvanceApi.DTO.Employee;
+using AdvanceApi.DTO.Status;
 using AdvanceApi.DTO.Title;
 using System;
 using System.Collections.Generic;
@@ -22,6 +24,11 @@ namespace AdvanceApi.DTO.AdvanceHistory
 
         public DateTime? Date { get; set; }
 
+        public StatusSelectDTO Status { get; set; }
+
         public virtual EmployeeSelectDTO Transactor { get; set; }
+
+        public virtual AdvanceSelectDTO Advance { get; set; }
+
     }
 }

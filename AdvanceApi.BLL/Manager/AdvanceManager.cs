@@ -84,7 +84,6 @@ namespace AdvanceApi.BLL.Manager
 			try
 			{
                 var result = await _unitOfWork.AdvanceDAL.GetEmployeeAdvances(employeeID);
-				var a=await _unitOfWork.AdvanceHistoryDAL.GetPendingApprovalAdvances(employeeID);
                 foreach (var item in result)
                 {
 					//genel mudur onayladi ise avans statusu onaylandi olarak belirlenir
@@ -111,14 +110,48 @@ namespace AdvanceApi.BLL.Manager
 				return new ApiResponse<List<AdvanceSelectDTO>>(mapped);
 
             }
-			catch (Exception)
+			catch (Exception ex)
 			{
-
-				throw;
+                return new ApiResponse<List<AdvanceSelectDTO>>(ex.Message);
+           
 			}
 		
         }
-        
+
+		/// <summary>
+		/// take employee ıd and return approval advances 
+		/// </summary>
+		/// <param name="employeeID"></param>
+		/// <returns>Aprooval advance histories</returns>
+        public async Task<ApiResponse<List<AdvanceHistorySelectDTO>>> GetPendingApprovalAdvances(int employeeID)
+        {
+            try
+            {
+                var result = await _unitOfWork.AdvanceHistoryDAL.GetPendingApprovalAdvances(employeeID);
+                foreach (var item in result)
+                {
+					//status ıd sıne gore status doldurulur
+					item.Status = await _unitOfWork.StatusDAL.GetStatusById(item.StatusID.Value);
+					//title id ye gore transactor title doldurulur
+					item.Transactor.Title=await _unitOfWork.TitleDAL.GetByTitleId(item.Transactor.TitleID.Value);
+					//avans isteyenin project nesnesinin alınması
+                    var project = await _unitOfWork.ProjectDAL.GetProjectById(item.Advance.ProjectID.Value);
+                    item.Advance.Project = project;
+				
+				}
+
+                var mapped = _mapper.Map<List<AdvanceHistory>, List<AdvanceHistorySelectDTO>>(result);
+
+                return new ApiResponse<List<AdvanceHistorySelectDTO>>(mapped);
+
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<List<AdvanceHistorySelectDTO>>(ex.Message);
+            }
+
+        }
+
 
 
 

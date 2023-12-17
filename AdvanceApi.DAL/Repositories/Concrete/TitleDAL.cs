@@ -31,7 +31,22 @@ namespace AdvanceApi.DAL.Repositories.Concrete
 				return null;
 
 			}
-
 		}
-	}
+        public async Task<Title> GetByTitleId(int Id)
+        {
+            try
+            {
+                string query = "select * from Title where Id=@Id";
+                var result = await _connection.QueryFirstOrDefaultAsync<Title>(query, new { Id });
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return null;
+
+            }
+
+        }
+
+    }
 }

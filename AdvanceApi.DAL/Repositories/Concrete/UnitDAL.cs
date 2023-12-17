@@ -40,6 +40,21 @@ namespace AdvanceApi.DAL.Repositories.Concrete
 			}
 			
 		}
+        public async Task<BusinessUnit> GetByUnitId(int id)
+        {
+            try
+            {
+                string query = "select * from BusinessUnit where ID=@ID";
+                var result = await _connection.QueryFirstOrDefaultAsync<BusinessUnit>(query, new { id });
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return null;
 
-	}
+            }
+
+        }
+
+    }
 }

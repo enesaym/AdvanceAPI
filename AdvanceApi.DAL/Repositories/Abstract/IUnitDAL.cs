@@ -11,5 +11,7 @@ namespace AdvanceApi.DAL.Repositories.Abstract
 	{
 		Task<List<BusinessUnit>> GetAllUnits();
 		Task<BusinessUnit> AddBusinessUnit();
-	}
+		Task<BusinessUnit> GetByUnitId(int id);
+
+    }
 }

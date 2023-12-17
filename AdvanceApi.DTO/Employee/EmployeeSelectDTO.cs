@@ -1,4 +1,5 @@
-﻿using AdvanceApi.DTO.Title;
+﻿using AdvanceApi.DTO.BusinessUnit;
+using AdvanceApi.DTO.Title;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,11 @@ namespace AdvanceApi.DTO.Employee
 
         public string Email { get; set; }
 
+        public int? BusinessUnitID { get; set; }
+
         public TitleSelectDTO Title { get; set; }
+
+        public BusinessUnitSelectDTO BusinessUnit { get; set; }
 
         public int TitleID { get; set; }
 

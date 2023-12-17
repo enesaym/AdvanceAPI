@@ -45,7 +45,7 @@ namespace AdvanceApi.Controllers
         [HttpGet("GetPendingApprovalAdvance/{id}")]
         public async Task<IActionResult> GetPendingApprovalAdvance(int id)
         {
-            var advance = await _advanceManager.GetAdvanceAndHistory(id);
+            var advance = await _advanceManager.GetPendingApprovalAdvances(id);
             if (advance.Success == true)
             {
                 return Ok(advance.Data);
