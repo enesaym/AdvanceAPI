@@ -13,7 +13,7 @@ namespace AdvanceApi.DAL.Repositories.Concrete
 {
     public class AdvanceDAL : IAdvanceDAL
     {
-        IDbConnection _connection;
+        private readonly IDbConnection _connection;
         IDbTransaction _transaction;
         public AdvanceDAL(IDbConnection dbConnection, IDbTransaction transaction)
         {
@@ -87,7 +87,7 @@ namespace AdvanceApi.DAL.Repositories.Concrete
                 if (receipt != null && !advanceEntry.Receipts.Any(x => x.ID == receipt.ID))
                     advanceEntry.Receipts.Add(receipt);
 
-                if (advancehistory != null && advancehistory.TransactorID != employeeId && !advanceEntry.AdvanceHistories.Any(x => x.ID == advancehistory.ID))
+                if (advancehistory != null && !advanceEntry.AdvanceHistories.Any(x => x.ID == advancehistory.ID))
                 {
                     transactor.Title = title;
                     advancehistory.Transactor = transactor;

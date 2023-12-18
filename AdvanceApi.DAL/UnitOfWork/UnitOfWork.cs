@@ -26,7 +26,7 @@ namespace AdvanceApi.DAL.UnitOfWork
 		private IAdvanceHistoryDAL _advanceHistoryDAL;
         private IProjectDAL _projectDAL;
         private IStatusDAL _statusDAL;
- 
+        private IRuleDAL _ruleDAL;
 
         public UnitOfWork(IDbConnection conn)
 		{
@@ -67,6 +67,10 @@ namespace AdvanceApi.DAL.UnitOfWork
         public IStatusDAL StatusDAL
         {
             get { return _statusDAL ?? (_statusDAL = new StatusDAL(_connection)); }
+        }
+        public IRuleDAL RuleDAL
+        {
+            get { return _ruleDAL ?? (_ruleDAL = new RuleDAL(_connection)); }
         }
 
 

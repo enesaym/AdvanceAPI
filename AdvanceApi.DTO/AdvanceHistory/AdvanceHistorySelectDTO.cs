@@ -20,6 +20,8 @@ namespace AdvanceApi.DTO.AdvanceHistory
 
         public int? TransactorID { get; set; }
 
+        public bool? IsActive { get; set; }
+
         public decimal? ApprovedAmount { get; set; }
 
         public EmployeeSelectDTO AfterEmployee { get; set; }

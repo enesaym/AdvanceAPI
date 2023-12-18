@@ -13,8 +13,8 @@ namespace AdvanceApi.DAL.Repositories.Concrete
 {
 	public class AdvanceHistoryDAL :IAdvanceHistoryDAL
 	{
-        IDbConnection _connection;
-		IDbTransaction _transaction;
+        private readonly IDbConnection _connection;
+        IDbTransaction _transaction;
         public AdvanceHistoryDAL(IDbConnection dbConnection,IDbTransaction transaction)
         {
                 _connection = dbConnection;
@@ -26,8 +26,8 @@ namespace AdvanceApi.DAL.Repositories.Concrete
 			try
 			{
 				string query = @"
-            INSERT INTO AdvanceHistory (StatusID, AdvanceID, TransactorID, ApprovedAmount, Date)
-            VALUES (@StatusID, @AdvanceID, @TransactorID, @ApprovedAmount, @Date)";
+            INSERT INTO AdvanceHistory (StatusID, AdvanceID, TransactorID, ApprovedAmount, Date,IsActive)
+            VALUES (@StatusID, @AdvanceID, @TransactorID, @ApprovedAmount, @Date,@IsActive)";
 
 				var parameters = new DynamicParameters();
 				parameters.Add("@StatusID", advanceHistory.StatusID);
@@ -35,8 +35,8 @@ namespace AdvanceApi.DAL.Repositories.Concrete
 				parameters.Add("@TransactorID", advanceHistory.TransactorID);
 				parameters.Add("@ApprovedAmount", advanceHistory.ApprovedAmount);
 				parameters.Add("@Date", advanceHistory.Date);
-
-				var rowsAffected = await _connection.ExecuteAsync(query, parameters,transaction:_transaction);
+                parameters.Add("@IsActive", advanceHistory.IsActive);
+                var rowsAffected = await _connection.ExecuteAsync(query, parameters,transaction:_transaction);
 
 				return rowsAffected > 0 ? advanceHistory : null;
 			}
@@ -52,14 +52,14 @@ namespace AdvanceApi.DAL.Repositories.Concrete
         
         public async Task<List<AdvanceHistory>> GetPendingApprovalAdvances(int employeeId)
         {
-            string query = @"select ah.Id,ah.TransactorID,ah.StatusID,ah.Date,ah.ApprovedAmount,e.ID,e.Name,e.Surname,e.TitleID,a.Id,a.ProjectID,a.DesiredDate,a.AdvanceDescription,a.AdvanceAmount,a.RequestDate,ee.Id,ee.Name,ee.Surname,bu.Id,bu.BusinessUnitName,t.Id,t.TitleName from AdvanceHistory ah
+            string query = @"select ah.Id,ah.TransactorID,ah.StatusID,ah.Date,ah.ApprovedAmount,ah.IsActive,e.ID,e.Name,e.Surname,e.TitleID,a.Id,a.ProjectID,a.DesiredDate,a.AdvanceDescription,a.AdvanceAmount,a.RequestDate,ee.Id,ee.Name,ee.Surname,bu.Id,bu.BusinessUnitName,t.Id,t.TitleName from AdvanceHistory ah
               join Employee e on e.ID = ah.TransactorID 
              join Employee uppere on uppere.ID = e.UpperEmployeeID 
              join Advance a on a.ID=ah.AdvanceID
             join Employee ee on ee.ID=a.EmployeeID
             join BusinessUnit bu on bu.ID=ee.BusinessUnitID
               join Title t on t.ID=ee.TitleID 
-               where uppere.ID= @EmployeeID";
+               where uppere.ID= @EmployeeID ";
 
 
             var parameters = new
@@ -114,6 +114,35 @@ namespace AdvanceApi.DAL.Repositories.Concrete
 
             return result.ToList();
         }
+
+        public async Task<bool> UpdateAdvanceHistoriesByAdvanceID(int advanceId)
+        {
+            string query = @"Update  AdvanceHistory  set IsActive=0  
+               where AdvanceID= @AdvanceID";
+            var parameters = new
+            {
+                AdvanceID = advanceId
+            };
+            var success = false;
+            try
+            {
+                int rowsAffected = await _connection.ExecuteAsync(query, parameters, transaction: _transaction);
+                if (rowsAffected > 0)
+                {
+                    success = true;
+                }
+                return success;
+            }
+            catch (Exception ex)
+            {
+                //loglanacak
+                return success;
+            }
+
+        }
+
+      
+
 
 
     }

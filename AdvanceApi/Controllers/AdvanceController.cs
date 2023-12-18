@@ -68,6 +68,7 @@ namespace AdvanceApi.Controllers
                 return null;
             }
         }
+
 		[HttpPost("RejectAdvance")]
 		public async Task<IActionResult> RejectAdvance([FromBody] AdvanceRejectDTO dto)
 		{
@@ -82,5 +83,20 @@ namespace AdvanceApi.Controllers
 			}
 		}
 
-	}
+        [HttpPost("ApproveAdvance")]
+        public async Task<IActionResult> ApproveAdvance([FromBody] AdvanceApproveDTO dto)
+        {
+            var reject = await _advanceManager.ApproveAdvance(dto);
+            if (reject.Success == true)
+            {
+                return Ok(reject);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+
+    }
 }

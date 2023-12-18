@@ -12,7 +12,7 @@ namespace AdvanceApi.DAL.Repositories.Concrete
 {
     public class StatusDAL :IStatusDAL
     {
-        IDbConnection _connection;
+        private readonly IDbConnection _connection;
         public StatusDAL(IDbConnection dbConnection)
         {
                 _connection = dbConnection;

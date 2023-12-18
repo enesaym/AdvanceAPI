@@ -20,6 +20,8 @@ namespace AdvanceApi.CORE.Entities
 
         public DateTime? Date { get; set; }
 
+        public bool? IsActive { get; set; }
+
         public virtual Advance Advance { get; set; }
 
         public virtual Employee Transactor { get; set; }

@@ -13,7 +13,7 @@ namespace AdvanceApi.DAL.Repositories.Concrete
 {
 	public class TitleDAL:ITitleDAL
 	{
-        IDbConnection _connection;
+        private readonly IDbConnection _connection;
         public TitleDAL(IDbConnection connection)
         {
             _connection = connection;
@@ -47,6 +47,7 @@ namespace AdvanceApi.DAL.Repositories.Concrete
             }
 
         }
+       
 
     }
 }

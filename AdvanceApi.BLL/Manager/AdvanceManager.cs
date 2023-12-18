@@ -50,6 +50,7 @@ namespace AdvanceApi.BLL.Manager
 					//talep ilk olusturuldugunda 201 = talep olusturuldu
 					advanceHistory.StatusID = 201;
 					advanceHistory.Date=DateTime.Now;
+					advanceHistory.IsActive = true;
 					advanceHistory.ApprovedAmount = advance.AdvanceAmount;
 					var advanceHistoryMapped=_mapper.Map<AdvanceHistoryInsertDTO, AdvanceHistory>(advanceHistory);
 
@@ -166,7 +167,7 @@ namespace AdvanceApi.BLL.Manager
                 {
 					//sonraki status id getir
 				
-                    if (item.Status.ID!=207 && item.Status.ID!=103)
+                    if (item.Status.ID!=207 && item.Status.ID!=103 && item.Status.ID != 102)
 					{
 						var afterStatus = new StatusSelectDTO();
 						afterStatus.ID = (item.Status.ID) + 1;
@@ -246,7 +247,129 @@ namespace AdvanceApi.BLL.Manager
 			}
 		}
 
+		public async Task<ApiResponse<AdvanceApproveDTO>> ApproveAdvance(AdvanceApproveDTO approve)
+		{
+	
+			try
+			{
+				var result = await IsItEnough(approve.ApprovedAmount, approve.TitleID);
+				if (result)
+				{
+					var dto = await ApproveEnoughAdvance(approve);
+                    return dto;
+                }
+				else
+				{
+                    //avans statusu bir sonrakine aktarılır ve history tablosuna ekleme yapılır
+                    var dto = await ApproveIsNotEnoughAdvance(approve);
+                    return dto;
+                }
+			}
+			catch (Exception ex)
+			{
+		
+				return new ApiResponse<AdvanceApproveDTO>(ex.Message);
+			}
+			finally
+			{
+			
+
+			}
+		}
+		//title ın onaylayabilecegi tutar yeterli ise avans direkt onaylanır
+		public async Task<bool> IsItEnough(decimal amount,int titleID)
+		{
+			var rule=await _unitOfWork.RuleDAL.GetRuleByTitleId(titleID);
+
+            return rule.MaxAmount >= amount;
+        }
 
 
-	}
+		//yeterli yetki icin onaylama senaryosu
+		public async Task<ApiResponse<AdvanceApproveDTO>> ApproveEnoughAdvance(AdvanceApproveDTO approve)
+		{
+            try
+            {
+                _unitOfWork.BeginTransaction();
+                //avans history onaylandı kaydı eklenir ve avans statusu onaylandı yapılır
+                AdvanceHistory advanceHistory = new AdvanceHistory();
+                advanceHistory.TransactorID = approve.EmployeeID;
+                advanceHistory.StatusID = 102;
+                advanceHistory.AdvanceID = approve.AdvanceID;
+
+				//onceki butun historyleri disable eder
+
+				await _unitOfWork.AdvanceHistoryDAL.UpdateAdvanceHistoriesByAdvanceID(approve.AdvanceID);
+
+				advanceHistory.IsActive = true;
+                advanceHistory.Date = DateTime.Now;
+                advanceHistory.ApprovedAmount = approve.ApprovedAmount;
+                var insertedAdvanceHistory = await _unitOfWork.AdvanceHistoryDAL.InsertAdvanceHistory(advanceHistory);
+
+                if (insertedAdvanceHistory != null)
+                {
+                    var result = await _unitOfWork.AdvanceDAL.UpdateAdvanceStatus(approve.AdvanceID);
+                    if (result == true)
+                    {
+                        _unitOfWork.Commit();
+                        return new ApiResponse<AdvanceApproveDTO>(approve);
+                    }
+                    else
+                    {
+
+                        return new ApiResponse<AdvanceApproveDTO>("Hata olustu");
+                    }
+                }
+                else
+                {
+
+                    return new ApiResponse<AdvanceApproveDTO>("Hata olustu");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                _unitOfWork.RollBack();
+                return new ApiResponse<AdvanceApproveDTO>(ex.Message);
+            }
+            finally
+            {
+                _unitOfWork.TransactionDispose();
+
+            }
+           
+        }
+
+		//yetki yeterli degilse onaylama senaryosu
+        public async Task<ApiResponse<AdvanceApproveDTO>> ApproveIsNotEnoughAdvance(AdvanceApproveDTO approve)
+        {
+            try
+            {
+                //avans history onaylandı kaydı eklenir ve avans statusu onaylandı yapılır
+                AdvanceHistory advanceHistory = new AdvanceHistory();
+                advanceHistory.TransactorID = approve.EmployeeID;
+                advanceHistory.StatusID = approve.StatusID+1;
+                advanceHistory.AdvanceID = approve.AdvanceID;
+				advanceHistory.IsActive = true;
+                await _unitOfWork.AdvanceHistoryDAL.UpdateAdvanceHistoriesByAdvanceID(approve.AdvanceID);
+                advanceHistory.Date = DateTime.Now;
+                advanceHistory.ApprovedAmount = approve.ApprovedAmount;
+                var insertedAdvanceHistory = await _unitOfWork.AdvanceHistoryDAL.InsertAdvanceHistory(advanceHistory);
+
+                return new ApiResponse<AdvanceApproveDTO>("Hata olustu");
+                
+
+            }
+            catch (Exception ex)
+            {
+           
+                return new ApiResponse<AdvanceApproveDTO>(ex.Message);
+            }
+         
+
+        }
+		
+
+
+    }
 }

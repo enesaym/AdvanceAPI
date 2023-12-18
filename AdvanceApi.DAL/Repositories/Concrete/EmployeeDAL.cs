@@ -12,7 +12,7 @@ namespace AdvanceApi.DAL.Repositories.Concrete
 {
     public class EmployeeDAL :IEmployeeDAL
     {
-        IDbConnection _connection;
+        private readonly IDbConnection _connection;
         public EmployeeDAL(IDbConnection dbConnection)
         {
                 _connection = dbConnection;

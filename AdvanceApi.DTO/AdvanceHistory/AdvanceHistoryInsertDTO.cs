@@ -12,6 +12,8 @@ namespace AdvanceApi.DTO.AdvanceHistory
 
 		public int? AdvanceID { get; set; }
 
+		public bool? IsActive { get; set; }
+
 		public int? TransactorID { get; set; }
 
 		public decimal? ApprovedAmount { get; set; }

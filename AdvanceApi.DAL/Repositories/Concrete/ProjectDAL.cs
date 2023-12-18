@@ -13,7 +13,7 @@ namespace AdvanceApi.DAL.Repositories.Concrete
 {
     public class ProjectDAL :IProjectDAL
     {
-        IDbConnection _connection;
+        private readonly IDbConnection _connection;
         public ProjectDAL(IDbConnection connection)
         {
                 _connection = connection;
