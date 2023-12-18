@@ -3,6 +3,7 @@ using AdvanceApi.CORE.Entities;
 using AdvanceApi.CORE.Response;
 using AdvanceApi.DAL.UnitOfWork;
 using AdvanceApi.DTO.Employee;
+using AdvanceApi.LOG.Log;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,10 +16,12 @@ namespace AdvanceApi.BLL.Manager
 	{
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly MyMapper _mapper;
-		public AuthManager(IUnitOfWork unitOfWork,MyMapper mapper)
+		private readonly ILog _logger;
+		public AuthManager(IUnitOfWork unitOfWork,MyMapper mapper, ILog logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+			_logger=logger;
         }
 		public async Task<ApiResponse<EmployeeSelectDTO>> Login(EmployeeLoginDTO dto)
 		{
@@ -47,12 +50,14 @@ namespace AdvanceApi.BLL.Manager
             try
             {
                 var employee= _mapper.Map<EmployeeRegisterDTO,Employee>(dto);
-                var mapped = await _unitOfWork.AuthDAL.Register(employee,dto.Password); 
+                var mapped = await _unitOfWork.AuthDAL.Register(employee,dto.Password);
+				_logger.TakeInfoLog(dto.Email + "mailine sahip kullanıcı eklendi");
 				return new ApiResponse<EmployeeRegisterDTO>(dto);
 			}
             catch (Exception ex)
             {
-                return new ApiResponse<EmployeeRegisterDTO>(ex.Message);
+				_logger.TakeWarningLog("Kullanıcı eklenirken hata olustu");
+				return new ApiResponse<EmployeeRegisterDTO>(ex.Message);
             }
         }
 

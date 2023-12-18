@@ -7,6 +7,7 @@ using AdvanceApi.DTO.AdvanceHistory;
 using AdvanceApi.DTO.Employee;
 using AdvanceApi.DTO.Project;
 using AdvanceApi.DTO.Status;
+using AdvanceApi.LOG.Log;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
@@ -20,10 +21,12 @@ namespace AdvanceApi.BLL.Manager
 	{
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly MyMapper _mapper;
-		public AdvanceManager(IUnitOfWork unitOfWork,MyMapper mapper)
+		private readonly ILog _logger;
+		public AdvanceManager(IUnitOfWork unitOfWork,MyMapper mapper,ILog logger)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+			_logger = logger;
         }
 
         /// <summary>
@@ -79,7 +82,6 @@ namespace AdvanceApi.BLL.Manager
 			}
 		}
 
-
 		
 		public async Task<ApiResponse<List<AdvanceSelectDTO>>> GetAdvanceAndHistory(int employeeID)
 		{
@@ -129,8 +131,22 @@ namespace AdvanceApi.BLL.Manager
         {
             try
             {
-
-                var result = await _unitOfWork.AdvanceHistoryDAL.GetPendingApprovalAdvances(employeeID);
+				//finans mudurune status 102 olan gosterilir
+				var emp = await _unitOfWork.EmployeeDAL.GetByEmployeeId(employeeID);
+				var result = new List<AdvanceHistory>();
+				if (emp.TitleID==3)
+				{
+                    result = await _unitOfWork.AdvanceHistoryDAL.GetPendingApprovalAdvancesFM(employeeID);
+                }
+				if (emp.TitleID == 6)
+				{
+                    result = await _unitOfWork.AdvanceHistoryDAL.GetPendingApprovalAdvancesAccountant(employeeID);
+                }
+				else
+				{
+                    result = await _unitOfWork.AdvanceHistoryDAL.GetPendingApprovalAdvances(employeeID);
+                }
+                
                
                 foreach (var item in result)
                 {
@@ -155,6 +171,7 @@ namespace AdvanceApi.BLL.Manager
             }
 
         }
+       
 
         public async Task<ApiResponse<List<AdvanceHistorySelectDTO>>> GetAdvanceHistoryByAdvanceId(int advanceID)
         {
@@ -199,7 +216,6 @@ namespace AdvanceApi.BLL.Manager
             }
 
         }
-
 
 		public async Task<ApiResponse<AdvanceRejectDTO>> RejectAdvance(AdvanceRejectDTO reject)
 		{
@@ -283,7 +299,6 @@ namespace AdvanceApi.BLL.Manager
 
             return rule.MaxAmount >= amount;
         }
-
 
 		//yeterli yetki icin onaylama senaryosu
 		public async Task<ApiResponse<AdvanceApproveDTO>> ApproveEnoughAdvance(AdvanceApproveDTO approve)

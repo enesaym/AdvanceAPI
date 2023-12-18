@@ -3,6 +3,7 @@ using AdvanceApi.BLL.Mapper;
 using AdvanceApi.DAL.Repositories.Abstract;
 using AdvanceApi.DAL.Repositories.Concrete;
 using AdvanceApi.DAL.UnitOfWork;
+using AdvanceApi.LOG.Log;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AdvanceApi.Extensions
@@ -19,7 +20,8 @@ namespace AdvanceApi.Extensions
 			services.AddScoped<EmployeeManager>();
 			services.AddScoped<AdvanceManager>();
             services.AddScoped<ProjectManager>();
+			services.AddScoped<ILog,Log>();
 
-        }
+		}
 	}
 }

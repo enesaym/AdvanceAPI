@@ -52,6 +52,7 @@ namespace AdvanceApi.DAL.Repositories.Concrete
         
         public async Task<List<AdvanceHistory>> GetPendingApprovalAdvances(int employeeId)
         {
+            
             string query = @"select ah.Id,ah.TransactorID,ah.StatusID,ah.Date,ah.ApprovedAmount,ah.IsActive,e.ID,e.Name,e.Surname,e.TitleID,a.Id,a.ProjectID,a.DesiredDate,a.AdvanceDescription,a.AdvanceAmount,a.RequestDate,ee.Id,ee.Name,ee.Surname,bu.Id,bu.BusinessUnitName,t.Id,t.TitleName from AdvanceHistory ah
               join Employee e on e.ID = ah.TransactorID 
              join Employee uppere on uppere.ID = e.UpperEmployeeID 
@@ -83,6 +84,70 @@ namespace AdvanceApi.DAL.Repositories.Concrete
         );
             return result.ToList();
         }
+        public async Task<List<AdvanceHistory>> GetPendingApprovalAdvancesFM(int employeeId)
+        {
+
+            string query = @" select ah.Id,ah.TransactorID,ah.StatusID,ah.Date,ah.ApprovedAmount,ah.IsActive,e.ID,e.Name,e.Surname,e.TitleID,a.Id,a.ProjectID,a.DesiredDate,a.AdvanceDescription,a.AdvanceAmount,a.RequestDate,ee.Id,ee.Name,ee.Surname,bu.Id,bu.BusinessUnitName,t.Id,t.TitleName from AdvanceHistory ah
+              join Employee e on e.ID = ah.TransactorID 
+             join Employee uppere on uppere.ID = e.UpperEmployeeID 
+             join Advance a on a.ID=ah.AdvanceID
+            join Employee ee on ee.ID=a.EmployeeID
+            join BusinessUnit bu on bu.ID=ee.BusinessUnitID
+              join Title t on t.ID=ee.TitleID 
+               where  Ah.StatusID=102";
+
+
+        
+            //ilk employee avans isteyen , ikinci son onaylayan
+            var result = await _connection.QueryAsync<AdvanceHistory, Employee, Advance, Employee, BusinessUnit, Title, AdvanceHistory>(
+            query,
+            (advanceHistory, transactor, advance, employee, businessUnit, title) =>
+            {
+                advanceHistory.Advance = advance;
+                advanceHistory.Transactor = transactor;
+                advanceHistory.Advance.Employee = employee;
+                advanceHistory.Advance.Employee.Title = title;
+                advanceHistory.Advance.Employee.BusinessUnit = businessUnit;
+                return advanceHistory;
+            }
+  
+
+        );
+            return result.ToList();
+        }
+        public async Task<List<AdvanceHistory>> GetPendingApprovalAdvancesAccountant(int employeeId)
+        {
+
+            string query = @" select ah.Id,ah.TransactorID,ah.StatusID,ah.Date,ah.ApprovedAmount,ah.IsActive,e.ID,e.Name,e.Surname,e.TitleID,a.Id,a.ProjectID,a.DesiredDate,a.AdvanceDescription,a.AdvanceAmount,a.RequestDate,ee.Id,ee.Name,ee.Surname,bu.Id,bu.BusinessUnitName,t.Id,t.TitleName from AdvanceHistory ah
+              join Employee e on e.ID = ah.TransactorID 
+             join Employee uppere on uppere.ID = e.UpperEmployeeID 
+             join Advance a on a.ID=ah.AdvanceID
+            join Employee ee on ee.ID=a.EmployeeID
+            join BusinessUnit bu on bu.ID=ee.BusinessUnitID
+              join Title t on t.ID=ee.TitleID 
+               where  Ah.StatusID=206";
+
+
+
+            //ilk employee avans isteyen , ikinci son onaylayan
+            var result = await _connection.QueryAsync<AdvanceHistory, Employee, Advance, Employee, BusinessUnit, Title, AdvanceHistory>(
+            query,
+            (advanceHistory, transactor, advance, employee, businessUnit, title) =>
+            {
+                advanceHistory.Advance = advance;
+                advanceHistory.Transactor = transactor;
+                advanceHistory.Advance.Employee = employee;
+                advanceHistory.Advance.Employee.Title = title;
+                advanceHistory.Advance.Employee.BusinessUnit = businessUnit;
+                return advanceHistory;
+            }
+
+
+        );
+            return result.ToList();
+        }
+
+
         public async Task<List<AdvanceHistory>> GetAdvanceHistoryByAdvanceId(int advanceId)
         {
             string query = @"SELECT ah.Id,ah.AdvanceID,ah.Date,ah.ApprovedAmount,s.Id,s.StatusName,e.Id,e.Name,e.Surname,e.UpperEmployeeID,e.TitleID,p.Id,p.DeterminedPaymentDate FROM AdvanceHistory ah 

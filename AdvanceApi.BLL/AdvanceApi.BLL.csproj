@@ -12,6 +12,7 @@
     <ProjectReference Include="..\AdvanceApi.CORE\AdvanceApi.CORE.csproj" />
     <ProjectReference Include="..\AdvanceApi.DAL\AdvanceApi.DAL.csproj" />
     <ProjectReference Include="..\AdvanceApi.DTO\AdvanceApi.DTO.csproj" />
+    <ProjectReference Include="..\AdvanceApi.LOG\AdvanceApi.LOG.csproj" />
   </ItemGroup>
 
 </Project>
