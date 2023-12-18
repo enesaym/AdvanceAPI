@@ -52,7 +52,7 @@ namespace AdvanceApi.DAL.Repositories.Concrete
         
         public async Task<List<AdvanceHistory>> GetPendingApprovalAdvances(int employeeId)
         {
-            string query = @"select ah.Id,ah.TransactorID,ah.StatusID,ah.Date,ah.ApprovedAmount,e.ID,e.Name,e.Surname,e.TitleID,a.Id,a.ProjectID,a.DesiredDate,a.RequestDate,ee.Id,ee.Name,ee.Surname,bu.Id,bu.BusinessUnitName,t.Id,t.TitleName from AdvanceHistory ah
+            string query = @"select ah.Id,ah.TransactorID,ah.StatusID,ah.Date,ah.ApprovedAmount,e.ID,e.Name,e.Surname,e.TitleID,a.Id,a.ProjectID,a.DesiredDate,a.AdvanceDescription,a.AdvanceAmount,a.RequestDate,ee.Id,ee.Name,ee.Surname,bu.Id,bu.BusinessUnitName,t.Id,t.TitleName from AdvanceHistory ah
               join Employee e on e.ID = ah.TransactorID 
              join Employee uppere on uppere.ID = e.UpperEmployeeID 
              join Advance a on a.ID=ah.AdvanceID
@@ -81,6 +81,37 @@ namespace AdvanceApi.DAL.Repositories.Concrete
          param: parameters
 
         );
+            return result.ToList();
+        }
+        public async Task<List<AdvanceHistory>> GetAdvanceHistoryByAdvanceId(int advanceId)
+        {
+            string query = @"SELECT ah.Id,ah.AdvanceID,ah.Date,ah.ApprovedAmount,s.Id,s.StatusName,e.Id,e.Name,e.Surname,e.UpperEmployeeID,e.TitleID,p.Id,p.DeterminedPaymentDate FROM AdvanceHistory ah 
+              inner join Status s on s.ID=ah.StatusID
+            inner join Employee e on e.ID=ah.TransactorID
+             left join Payment p on p.DeterminedPaymentDate=ah.AdvanceID
+               where ah.AdvanceID= @AdvanceID";
+            var parameters = new
+            {
+                AdvanceID = advanceId
+            };
+            //EMPLOYEE  : islem yapan 
+            var result = await _connection.QueryAsync<AdvanceHistory, Status, Employee, Payment, AdvanceHistory>(
+            query,
+            (advanceHistory, status,employee, payment) =>
+            {
+             
+                advanceHistory.Status = status;
+                advanceHistory.Transactor = employee;
+                if (payment != null)
+                {
+                    advanceHistory.Advance.Payments.Add(payment);
+                }
+                return advanceHistory;
+            },
+         param: parameters
+
+        );
+
             return result.ToList();
         }
 

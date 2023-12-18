@@ -7,6 +7,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace AdvanceApi.DAL.Repositories.Concrete
 {
@@ -98,8 +99,34 @@ namespace AdvanceApi.DAL.Repositories.Concrete
 
             return advances.Values.ToList();
         }
+        
+        public async Task<bool> UpdateAdvanceStatus(int advanceId)
+        {
+            string query = @"Update Advance set StatusID= @NewStatusID 
+                    WHERE ID = @AdvanceID";
+			var parameters = new
+			{
+				NewStatusID = 103,
+				AdvanceID = advanceId
+			};
+			var success = false;
+			try
+            {		
+				int rowsAffected =await _connection.ExecuteAsync(query, parameters,transaction: _transaction);
+                if(rowsAffected > 0)
+                {
+                    success=true;
+                }
+                return success;
+			}
+            catch (Exception ex)
+            {
+                //loglanacak
+                return success;
+            }
+               
+        }
 
-       
 
     }
 }

@@ -20,6 +20,8 @@ namespace AdvanceApi.DTO.Employee
 
         public string Email { get; set; }
 
+        public int? UpperEmployeeID { get; set; }
+
         public int? BusinessUnitID { get; set; }
 
         public TitleSelectDTO Title { get; set; }

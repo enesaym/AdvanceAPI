@@ -11,6 +11,7 @@ namespace AdvanceApi.DAL.Repositories.Abstract
 	{
 		Task<AdvanceHistory> InsertAdvanceHistory(AdvanceHistory advanceHistory);
 		Task<List<AdvanceHistory>> GetPendingApprovalAdvances(int employeeId);
+		Task<List<AdvanceHistory>> GetAdvanceHistoryByAdvanceId(int advanceId);
 
     }
 }

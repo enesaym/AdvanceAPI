@@ -22,6 +22,10 @@ namespace AdvanceApi.DTO.AdvanceHistory
 
         public decimal? ApprovedAmount { get; set; }
 
+        public EmployeeSelectDTO AfterEmployee { get; set; }
+
+        public StatusSelectDTO AfterStatus { get; set; }
+
         public DateTime? Date { get; set; }
 
         public StatusSelectDTO Status { get; set; }

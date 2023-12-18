@@ -55,6 +55,32 @@ namespace AdvanceApi.Controllers
                 return null;
             }
         }
+        [HttpGet("GetAdvanceHistoryDetails/{id}")]
+        public async Task<IActionResult> GetAdvanceHistoryDetails(int id)
+        {
+            var advance = await _advanceManager.GetAdvanceHistoryByAdvanceId(id);
+            if (advance.Success == true)
+            {
+                return Ok(advance.Data);
+            }
+            else
+            {
+                return null;
+            }
+        }
+		[HttpPost("RejectAdvance")]
+		public async Task<IActionResult> RejectAdvance([FromBody] AdvanceRejectDTO dto)
+		{
+			var reject = await _advanceManager.RejectAdvance(dto);
+			if (reject.Success == true)
+			{
+				return Ok(reject);
+			}
+			else
+			{
+				return null;
+			}
+		}
 
-    }
+	}
 }

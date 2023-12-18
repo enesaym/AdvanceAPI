@@ -4,6 +4,7 @@ using AdvanceApi.CORE.Response;
 using AdvanceApi.DAL.UnitOfWork;
 using AdvanceApi.DTO.Advance;
 using AdvanceApi.DTO.AdvanceHistory;
+using AdvanceApi.DTO.Employee;
 using AdvanceApi.DTO.Project;
 using AdvanceApi.DTO.Status;
 using AutoMapper;
@@ -62,7 +63,7 @@ namespace AdvanceApi.BLL.Manager
 				else
 				{
 					
-					return null; 
+					return new ApiResponse<AdvanceInsertDTO>("Hata olustu"); 
 				}
 			}
 			catch (Exception ex)
@@ -127,7 +128,9 @@ namespace AdvanceApi.BLL.Manager
         {
             try
             {
+
                 var result = await _unitOfWork.AdvanceHistoryDAL.GetPendingApprovalAdvances(employeeID);
+               
                 foreach (var item in result)
                 {
 					//status ıd sıne gore status doldurulur
@@ -152,11 +155,98 @@ namespace AdvanceApi.BLL.Manager
 
         }
 
+        public async Task<ApiResponse<List<AdvanceHistorySelectDTO>>> GetAdvanceHistoryByAdvanceId(int advanceID)
+        {
+            try
+            {
+                var result = await _unitOfWork.AdvanceHistoryDAL.GetAdvanceHistoryByAdvanceId(advanceID);
+                var mapped = _mapper.Map<List<AdvanceHistory>, List<AdvanceHistorySelectDTO>>(result);
+				//sonraki status ve kullanici verme
+                foreach (var item in mapped)
+                {
+					//sonraki status id getir
+				
+                    if (item.Status.ID!=207 && item.Status.ID!=103)
+					{
+						var afterStatus = new StatusSelectDTO();
+						afterStatus.ID = (item.Status.ID) + 1;
+						var afterStatusName = await _unitOfWork.StatusDAL.GetStatusById((item.Status.ID) + 1);
+						afterStatus.StatusName = afterStatusName.StatusName;
+						item.AfterStatus = afterStatus;
+
+					}
+					else
+					{
+                        var afterStatus = new StatusSelectDTO();
+						item.AfterStatus = afterStatus;
+                        item.AfterStatus = item.Status;
+					}
+					//sonraki kullanıcı
+					//var employee = new EmployeeSelectDTO();
+                    var afterEmployee = await _unitOfWork.EmployeeDAL.GetByEmployeeId(item.Transactor.UpperEmployeeID.Value);
+					item.AfterEmployee = new EmployeeSelectDTO();
+					item.AfterEmployee.ID = afterEmployee.ID;
+					item.AfterEmployee.Name = afterEmployee.Name;
+					item.AfterEmployee.TitleID = afterEmployee.TitleID.Value;  
+                }
+                return new ApiResponse<List<AdvanceHistorySelectDTO>>(mapped);
+
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<List<AdvanceHistorySelectDTO>>(ex.Message);
+            }
+
+        }
+
+
+		public async Task<ApiResponse<AdvanceRejectDTO>> RejectAdvance(AdvanceRejectDTO reject)
+		{
+			_unitOfWork.BeginTransaction();
+			try
+			{
+				//advance history eklenir ->> reddedildi
+				AdvanceHistory advanceHistory = new AdvanceHistory();
+				advanceHistory.TransactorID = reject.EmployeeID;
+				advanceHistory.StatusID = 103;
+				advanceHistory.AdvanceID= reject.AdvanceID;
+				advanceHistory.Date = DateTime.Now;
+				advanceHistory.ApprovedAmount = 0;
+				var insertedAdvanceHistory = await _unitOfWork.AdvanceHistoryDAL.InsertAdvanceHistory(advanceHistory);
+
+				if (insertedAdvanceHistory != null)
+				{
+					var result= await _unitOfWork.AdvanceDAL.UpdateAdvanceStatus(reject.AdvanceID);
+					if (result==true)
+					{
+						_unitOfWork.Commit();
+						return new ApiResponse<AdvanceRejectDTO>(reject);
+					}
+					else
+					{
+					
+						return new ApiResponse<AdvanceRejectDTO>("Hata olustu");
+					}
+				}
+				else
+				{
+
+					return new ApiResponse<AdvanceRejectDTO>("Hata olustu");
+				}
+			}
+			catch (Exception ex)
+			{
+				_unitOfWork.RollBack();
+				return new ApiResponse<AdvanceRejectDTO>(ex.Message);
+			}
+			finally
+			{
+				_unitOfWork.TransactionDispose();
+
+			}
+		}
 
 
 
-
-
-
-    }
+	}
 }

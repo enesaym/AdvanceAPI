@@ -11,6 +11,7 @@ namespace AdvanceApi.DAL.Repositories.Abstract
 	{
 		Task<int> AdvanceInsert(Advance advance);
 		Task<List<Advance>> GetEmployeeAdvances(int employeeId);
+		Task<bool> UpdateAdvanceStatus(int advanceId);
 
-    }
+	}
 }

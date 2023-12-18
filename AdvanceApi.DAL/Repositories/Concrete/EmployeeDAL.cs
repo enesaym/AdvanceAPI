@@ -31,6 +31,21 @@ namespace AdvanceApi.DAL.Repositories.Concrete
 
             }
         }
+        public async Task<Employee> GetByEmployeeId(int Id)
+        {
+            try
+            {
+                string query = "select * from Employee where Id=@Id";
+                var result = await _connection.QueryFirstOrDefaultAsync<Employee>(query, new { Id });
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return null;
+
+            }
+
+        }
 
 
 
