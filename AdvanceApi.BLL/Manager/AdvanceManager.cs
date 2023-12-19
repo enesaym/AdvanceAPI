@@ -138,7 +138,7 @@ namespace AdvanceApi.BLL.Manager
 				{
                     result = await _unitOfWork.AdvanceHistoryDAL.GetPendingApprovalAdvancesFM(employeeID);
                 }
-				if (emp.TitleID == 6)
+				else if (emp.TitleID == 6)
 				{
                     result = await _unitOfWork.AdvanceHistoryDAL.GetPendingApprovalAdvancesAccountant(employeeID);
                 }
@@ -265,7 +265,6 @@ namespace AdvanceApi.BLL.Manager
 
 		public async Task<ApiResponse<AdvanceApproveDTO>> ApproveAdvance(AdvanceApproveDTO approve)
 		{
-	
 			try
 			{
 				var result = await IsItEnough(approve.ApprovedAmount, approve.TitleID);
@@ -300,8 +299,124 @@ namespace AdvanceApi.BLL.Manager
             return rule.MaxAmount >= amount;
         }
 
-		//yeterli yetki icin onaylama senaryosu
-		public async Task<ApiResponse<AdvanceApproveDTO>> ApproveEnoughAdvance(AdvanceApproveDTO approve)
+        //fm tarih belirleme
+        public async Task<ApiResponse<FMApproveAdvanceDTO>> ApproveAdvanceFM(FMApproveAdvanceDTO approve)
+        {
+            try
+            {
+                _unitOfWork.BeginTransaction();
+                //avans history onaylandı kaydı eklenir ve avans statusu onaylandı yapılır
+                AdvanceHistory advanceHistory = new AdvanceHistory();
+                advanceHistory.TransactorID = approve.EmployeeID;
+                advanceHistory.StatusID = 206;
+                advanceHistory.AdvanceID = approve.AdvanceID;
+                //onceki butun historyleri disable eder
+
+                await _unitOfWork.AdvanceHistoryDAL.UpdateAdvanceHistoriesByAdvanceID(approve.AdvanceID);
+
+                advanceHistory.IsActive = true;
+                advanceHistory.Date = DateTime.Now;
+                advanceHistory.ApprovedAmount = approve.ApprovedAmount;
+                var insertedAdvanceHistory = await _unitOfWork.AdvanceHistoryDAL.InsertAdvanceHistory(advanceHistory);
+
+                if (insertedAdvanceHistory != null)
+                {
+                    Payment payment = new Payment();
+                    payment.FinanceManagerID = approve.EmployeeID;
+                    payment.AdvanceId = approve.AdvanceID;
+                    payment.DeterminedPaymentDate = approve.DeterminedPaymentDate;
+                    var result = await _unitOfWork.PaymentDAL.PaymentInsert(payment);
+                    if (result > 0)
+                    {
+                        _unitOfWork.Commit();
+                        return new ApiResponse<FMApproveAdvanceDTO>(approve);
+                    }
+                    else
+                    {
+
+                        return new ApiResponse<FMApproveAdvanceDTO>("Hata olustu");
+                    }
+                }
+                else
+                {
+
+                    return new ApiResponse<FMApproveAdvanceDTO>("Hata olustu");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                _unitOfWork.RollBack();
+                return new ApiResponse<FMApproveAdvanceDTO>(ex.Message);
+            }
+            finally
+            {
+                _unitOfWork.TransactionDispose();
+
+            }
+
+        }
+
+        //muhasebeci onaylama
+        public async Task<ApiResponse<AccountantApproveDTO>> ApproveAdvanceAccountant(AccountantApproveDTO approve)
+        {
+            try
+            {
+                _unitOfWork.BeginTransaction();
+                //avans history onaylandı kaydı eklenir ve avans statusu onaylandı yapılır
+                AdvanceHistory advanceHistory = new AdvanceHistory();
+                advanceHistory.TransactorID = approve.AccountantID;
+                advanceHistory.StatusID = 207;
+                advanceHistory.AdvanceID = approve.AdvanceID;
+                //onceki butun historyleri disable eder
+
+                await _unitOfWork.AdvanceHistoryDAL.UpdateAdvanceHistoriesByAdvanceID(approve.AdvanceID);
+
+                advanceHistory.IsActive = true;
+                advanceHistory.Date = DateTime.Now;
+                var insertedAdvanceHistory = await _unitOfWork.AdvanceHistoryDAL.InsertAdvanceHistory(advanceHistory);
+
+                if (insertedAdvanceHistory != null)
+                {
+                    Receipt receipt = new Receipt();
+                    receipt.AccountantID = approve.AccountantID;
+                    receipt.AdvanceID = approve.AdvanceID;
+                    receipt.isRefundReceipt = false;
+                    receipt.ReceiptNo=approve.ReceiptNo;
+                    receipt.Date = DateTime.Now;
+                    var result = await _unitOfWork.ReceiptDAL.ReceiptInsert(receipt);
+                    if (result > 0)
+                    {
+                        _unitOfWork.Commit();
+                        return new ApiResponse<AccountantApproveDTO>(approve);
+                    }
+                    else
+                    {
+
+                        return new ApiResponse<AccountantApproveDTO>("Hata olustu");
+                    }
+                }
+                else
+                {
+
+                    return new ApiResponse<AccountantApproveDTO>("Hata olustu");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                _unitOfWork.RollBack();
+                return new ApiResponse<AccountantApproveDTO>(ex.Message);
+            }
+            finally
+            {
+                _unitOfWork.TransactionDispose();
+
+            }
+
+        }
+        //yeterli yetki icin onaylama senaryosu
+        public async Task<ApiResponse<AdvanceApproveDTO>> ApproveEnoughAdvance(AdvanceApproveDTO approve)
 		{
             try
             {

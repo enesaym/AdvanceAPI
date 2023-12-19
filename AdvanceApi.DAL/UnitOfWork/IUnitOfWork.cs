@@ -1,4 +1,5 @@
 ﻿using AdvanceApi.DAL.Repositories.Abstract;
+using AdvanceApi.DAL.Repositories.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,8 @@ namespace AdvanceApi.DAL.UnitOfWork
         IProjectDAL ProjectDAL { get; }
         IStatusDAL StatusDAL { get; }
         IRuleDAL RuleDAL { get; }
+        IPaymentDAL PaymentDAL { get; }
+        IReceiptDAL ReceiptDAL { get; }
         IAdvanceHistoryDAL AdvanceHistoryDAL { get; }
 		void Commit();
 		void RollBack();

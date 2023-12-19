@@ -27,6 +27,9 @@ namespace AdvanceApi.DAL.UnitOfWork
         private IProjectDAL _projectDAL;
         private IStatusDAL _statusDAL;
         private IRuleDAL _ruleDAL;
+        private IPaymentDAL _paymentDAL;
+        private IReceiptDAL _receiptDAL;
+
 
         public UnitOfWork(IDbConnection conn)
 		{
@@ -34,8 +37,9 @@ namespace AdvanceApi.DAL.UnitOfWork
 			_connection.Open();
 		}
 
-		//IQuestionRepository çünkü QuestionRepository yerine başka bir class daha newleyip gönderebiliriz. örn: QuestionRepository2
-		public IUnitDAL UnitDAL
+        //IQuestionRepository çünkü QuestionRepository yerine başka bir class daha newleyip gönderebiliriz. örn: QuestionRepository2
+        #region new dals
+        public IUnitDAL UnitDAL
 		{
 			get { return _unitDAL ?? (_unitDAL = new UnitDAL(_connection)); }
 		}
@@ -72,7 +76,15 @@ namespace AdvanceApi.DAL.UnitOfWork
         {
             get { return _ruleDAL ?? (_ruleDAL = new RuleDAL(_connection)); }
         }
-
+        public IPaymentDAL PaymentDAL
+        {
+            get { return _paymentDAL ?? (_paymentDAL = new PaymentDAL(_connection,_transaction)); }
+        }
+        public IReceiptDAL ReceiptDAL
+        {
+            get { return _receiptDAL ?? (_receiptDAL = new ReceiptDAL(_connection, _transaction)); }
+        }
+        #endregion 
 
         public void BeginTransaction()
 		{

@@ -88,16 +88,43 @@ namespace AdvanceApi.Controllers
         [HttpPost("ApproveAdvance")]
         public async Task<IActionResult> ApproveAdvance([FromBody] AdvanceApproveDTO dto)
         {
-            var reject = await _advanceManager.ApproveAdvance(dto);
-            if (reject.Success == true)
+            var approve = await _advanceManager.ApproveAdvance(dto);
+            if (approve.Success == true)
             {
-                return Ok(reject);
+                return Ok(approve);
             }
             else
             {
                 return null;
             }
         }
+        [HttpPost("ApproveAdvanceFM")]
+        public async Task<IActionResult> ApproveAdvanceFM([FromBody] FMApproveAdvanceDTO dto)
+        {
+            var approve = await _advanceManager.ApproveAdvanceFM(dto);
+            if (approve.Success == true)
+            {
+                return Ok(approve);
+            }
+            else
+            {
+                return null;
+            }
+        }
+        [HttpPost("ApproveAdvanceAccountant")]
+        public async Task<IActionResult> ApproveAdvanceAccountant([FromBody] AccountantApproveDTO dto)
+        {
+            var approve = await _advanceManager.ApproveAdvanceAccountant(dto);
+            if (approve.Success == true)
+            {
+                return Ok(approve);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
 
 
     }
