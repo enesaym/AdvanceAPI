@@ -40,7 +40,12 @@ namespace AdvanceApi.Controllers
 		[HttpPost("Register")]
 		public async Task<IActionResult> Register([FromBody] EmployeeRegisterDTO dto)
 		{
+			
 			var user = await _authManager.Register(dto);
+			if(user==null)
+			{
+				return null;
+			}
 			return Ok(user);
 		}
 	}
