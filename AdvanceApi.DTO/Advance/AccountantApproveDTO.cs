@@ -16,6 +16,8 @@ namespace AdvanceApi.DTO.Advance
 
         public bool? isRefundReceipt { get; set; }
 
+        public decimal ApprovedAmount { get; set; }
+
         public int AdvanceID { get; set; }
 
         public DateTime? Date { get; set; }

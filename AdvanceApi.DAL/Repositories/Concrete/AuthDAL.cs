@@ -72,6 +72,14 @@ namespace AdvanceApi.DAL.Repositories.Concrete
 			CreatePass(password, out passHash, out passSalt);
 			employee.PasswordHash = passHash;
 			employee.PasswordSalt = passSalt;
+
+			var existingUser = await GetUserByEmail(employee.Email);
+			if (existingUser != null)
+			{
+				return null;
+			}
+
+
 			var sqlquery = "Insert into Employee (Name,Surname,PhoneNumber,Email,PasswordHash,PasswordSalt,BusinessUnitID,TitleID,UpperEmployeeID) Values (@Name,@Surname,@PhoneNumber,@Email,@PasswordHash,@PasswordSalt,@BusinessUnitID,@TitleID,@UpperEmployeeID)";
 
 			var parameters = new DynamicParameters();
@@ -100,6 +108,15 @@ namespace AdvanceApi.DAL.Repositories.Concrete
 					passSalt = hmac.Key;
 				}
 			}
+		}
+		public async Task<Employee> GetUserByEmail(string email)
+		{
+			var sqlQuery = "SELECT * FROM Employee WHERE Email = @Email";
+			var parameters = new DynamicParameters();
+			parameters.Add("@Email", email, DbType.String);
+
+			var user = await _connection.QueryFirstOrDefaultAsync<Employee>(sqlQuery, parameters);
+			return user;
 		}
 
 	}

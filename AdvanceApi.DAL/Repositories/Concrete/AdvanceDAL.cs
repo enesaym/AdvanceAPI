@@ -49,7 +49,7 @@ namespace AdvanceApi.DAL.Repositories.Concrete
         {
             string query = @"SELECT a.Id, a.AdvanceAmount, a.AdvanceDescription, a.ProjectID, a.DesiredDate, a.RequestDate, a.StatusID, a.EmployeeID,
                     p.Id, p.DeterminedPaymentDate,
-                    r.Id, r.ReceiptNo, r.Date, r.isRefundReceipt,
+                    r.Id, r.ReceiptNo, r.Date, r.isRefundReceipt,r.AdvanceID,r.AccountantID,
                     ah.Id, ah.TransactorID, ah.Date, ah.StatusID, ah.ApprovedAmount,
                     e.Id, e.Name, e.Surname,
                     t.Id, t.TitleName

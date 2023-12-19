@@ -51,12 +51,16 @@ namespace AdvanceApi.BLL.Manager
             {
                 var employee= _mapper.Map<EmployeeRegisterDTO,Employee>(dto);
                 var mapped = await _unitOfWork.AuthDAL.Register(employee,dto.Password);
+				if (mapped == null)
+				{
+					return null;
+				}
 				_logger.TakeInfoLog(dto.Email + "mailine sahip kullanıcı eklendi");
 				return new ApiResponse<EmployeeRegisterDTO>(dto);
 			}
             catch (Exception ex)
             {
-				_logger.TakeWarningLog("Kullanıcı eklenirken hata olustu");
+				_logger.TakeErrorLog("Kullanıcı eklenirken hata olustu");
 				return new ApiResponse<EmployeeRegisterDTO>(ex.Message);
             }
         }

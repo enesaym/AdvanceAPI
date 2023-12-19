@@ -125,7 +125,7 @@ namespace AdvanceApi.DAL.Repositories.Concrete
             join Employee ee on ee.ID=a.EmployeeID
             join BusinessUnit bu on bu.ID=ee.BusinessUnitID
               join Title t on t.ID=ee.TitleID 
-               where  Ah.StatusID=102";
+               where  Ah.StatusID=206";
 
 
 

@@ -61,9 +61,12 @@ namespace AdvanceApi.BLL.Manager
 
 					_unitOfWork.Commit();
 
-					//eklenen advance id döner
-					return new ApiResponse<AdvanceInsertDTO>(advance); 
-				}
+                    //eklenen advance id döner
+                    //buradaki loglar enumdan alınabilir
+                    _logger.TakeInfoLog(advance.EmployeeID + "ID li kullanıcı avans talebi olusturdu");
+                    return new ApiResponse<AdvanceInsertDTO>(advance);
+                  
+                }
 				else
 				{
 					
@@ -73,7 +76,8 @@ namespace AdvanceApi.BLL.Manager
 			catch (Exception ex)
 			{
 				_unitOfWork.RollBack();
-				return new ApiResponse<AdvanceInsertDTO>(ex.Message);
+                _logger.TakeErrorLog(advance.EmployeeID + "ID li kullanıcı avans talebi olusturulurken hata");
+                return new ApiResponse<AdvanceInsertDTO>(ex.Message);
 			}
 			finally 
 			{
@@ -367,6 +371,7 @@ namespace AdvanceApi.BLL.Manager
                 AdvanceHistory advanceHistory = new AdvanceHistory();
                 advanceHistory.TransactorID = approve.AccountantID;
                 advanceHistory.StatusID = 207;
+                advanceHistory.ApprovedAmount = approve.ApprovedAmount;
                 advanceHistory.AdvanceID = approve.AdvanceID;
                 //onceki butun historyleri disable eder
 
